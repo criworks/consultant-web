@@ -1,0 +1,23 @@
+---
+import { Circle } from '@lucide/astro'
+import { site } from '../../data/site'
+---
+
+<nav
+  class="flex flex-col gap-10"
+  aria-label="Primary"
+  data-animate="hero-nav"
+>
+  {
+    site.nav.map(item => (
+      <a
+        href={item.href}
+        class="flex items-center gap-3 text-sm uppercase tracking-[-0.28px] text-foreground transition-opacity hover:opacity-80"
+        aria-current={item.active ? 'page' : undefined}
+      >
+        {item.active && <Circle size={10} fill="currentColor" stroke-width={0} class="shrink-0" />}
+        {item.label}
+      </a>
+    ))
+  }
+</nav>

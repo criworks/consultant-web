@@ -1,0 +1,38 @@
+---
+import { ArrowRight } from '@lucide/astro'
+import { site } from '../../data/site'
+---
+
+<div
+  class="flex flex-col gap-10 sm:flex-row sm:flex-wrap sm:items-center sm:gap-10"
+  data-animate="hero-cta"
+>
+  {
+    site.isUnderConstruction ? (
+      <span class="text-sm font-medium tracking-wide text-white uppercase">
+        Sitio web en construcción
+      </span>
+    ) : (
+      <>
+        <a
+          href="mailto:cri@cri.works"
+          class="group inline-flex items-center gap-[18px] rounded-[10px] py-2 transition-opacity hover:opacity-90"
+        >
+          <span class="text-xl text-foreground">{site.hero.ctaPrimary}</span>
+          <span
+            class="flex shrink-0 items-center justify-center rounded-full border-8 border-white/10 bg-white p-3.5 text-background"
+            aria-hidden="true"
+          >
+            <ArrowRight size={24} stroke-width={2.5} class="shrink-0" />
+          </span>
+        </a>
+        <a
+          href="#work"
+          class="rounded-[10px] p-4 text-lg text-accent transition-opacity hover:opacity-80"
+        >
+          {site.hero.ctaSecondary}
+        </a>
+      </>
+    )
+  }
+</div>

@@ -1,0 +1,30 @@
+---
+import { ArrowUpRight, Mail } from '@lucide/astro'
+import { site } from '../../data/site'
+---
+
+<div
+  class="flex flex-col items-end gap-10 site-col-start-14 site-col-span-2"
+  data-animate="hero-contact"
+>
+  <a
+    href={`mailto:${site.email}`}
+    class="flex items-center gap-2 rounded-[30px] text-sm uppercase tracking-[-0.28px] text-foreground transition-opacity hover:opacity-80"
+  >
+    <Mail size={14} stroke-width={1.5} class="shrink-0" />
+    {site.email}
+  </a>
+  {
+    site.social.map(link => (
+      <a
+        href={link.href}
+        class="flex items-center gap-2 text-sm uppercase tracking-[-0.28px] text-accent transition-opacity hover:opacity-80"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <ArrowUpRight size={18} stroke-width={2} class="shrink-0" />
+        {link.label}
+      </a>
+    ))
+  }
+</div>

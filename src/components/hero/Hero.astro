@@ -1,0 +1,67 @@
+---
+import SiteGrid from '../grid/SiteGrid.astro'
+import HeroHeader from './HeroHeader.astro'
+import HeroTitle from './HeroTitle.astro'
+import HeroCta from './HeroCta.astro'
+---
+
+<section id="hero" class="sticky top-0 h-dvh text-foreground overflow-hidden">
+  <SiteGrid class="relative z-10 h-dvh grid-rows-[auto_1fr_auto] pb-4">
+    <HeroHeader />
+
+    <div
+      class="site-col-start-1 site-col-span-16 flex min-h-0 flex-col justify-end lg:site-col-start-2 lg:site-col-span-10"
+    >
+      <div class="flex flex-col gap-10">
+        <HeroTitle />
+        <HeroCta />
+      </div>
+    </div>
+  </SiteGrid>
+</section>
+
+<script>
+  import { initGsap } from '../../lib/gsap'
+
+  const gsap = initGsap()
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  if (!prefersReducedMotion) {
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
+
+    tl.from('.hero-title-line', {
+      y: 48,
+      opacity: 0,
+      duration: 1,
+      stagger: 0.12,
+    })
+      .from(
+        '[data-animate="hero-sub"]',
+        {
+          y: 24,
+          opacity: 0,
+          duration: 0.8,
+        },
+        '-=0.5'
+      )
+      .from(
+        '[data-animate="hero-nav"], [data-animate="hero-tagline"], [data-animate="hero-contact"]',
+        {
+          opacity: 0,
+          y: 12,
+          duration: 0.6,
+          stagger: 0.08,
+        },
+        '-=0.6'
+      )
+      .from(
+        '[data-animate="hero-cta"]',
+        {
+          y: 20,
+          opacity: 0,
+          duration: 0.7,
+        },
+        '-=0.3'
+      )
+  }
+</script>

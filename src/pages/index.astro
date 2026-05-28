@@ -1,26 +1,173 @@
 ---
-import '../styles/global.css';
-// Component Imports
-import Button from '../components/Button.astro';
-
-// Full Astro Component Syntax:
-// https://docs.astro.build/basics/astro-components/
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Hero from '../components/hero/Hero.astro'
+import Intro from '../components/intro/Intro.astro'
+import SiteGrid from '../components/grid/SiteGrid.astro'
+import HeroNav from '../components/hero/HeroNav.astro'
+import { site } from '../data/site'
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro + TailwindCSS</title>
-	</head>
+<BaseLayout title="Cri Works — Product Designer" description={site.hero.subtitle}>
+  <!-- Intro Background Gradient overlay (Linear) - Starts hidden -->
+  <div
+    class="fixed inset-0 z-0 pointer-events-none opacity-0"
+    style="background: linear-gradient(to bottom, var(--color-accent-medium) 0%, var(--color-background) 100%);"
+    data-animate="intro-gradient"
+  >
+  </div>
 
-	<body>
-		<div class="grid place-items-center h-screen content-center">
-			<Button>Tailwind Button in Astro!</Button>
-			<a href="/markdown-page" class="p-4 underline">Markdown is also supported...</a>
-		</div>
-	</body>
-</html>
+  <!-- Hero Background Gradient overlay (Radial) - Starts visible -->
+  <div
+    class="fixed inset-0 z-0 pointer-events-none"
+    style="background: radial-gradient(circle at 60% 30%, var(--color-accent-medium) 0%, var(--color-accent-dark) 70%);"
+    data-animate="hero-gradient"
+  >
+  </div>
+
+  <!-- Floating Image -->
+  <div class="fixed inset-0 z-0 pointer-events-none overflow-visible">
+    <img
+      src="/images/cri colored new techblue.png"
+      alt=""
+      class="absolute max-w-none object-cover"
+      style="bottom: 0; left: 50%; height: 886px; opacity: 1;"
+      data-animate="floating-image"
+    />
+  </div>
+
+  <!-- Backdrop Blur (will fade in on scroll) -->
+  <div
+    class="fixed inset-0 z-5 pointer-events-none"
+    style="backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px)"
+    data-animate="intro-backdrop"
+  >
+  </div>
+
+  <!-- Persistent Nav -->
+  {!site.isUnderConstruction && (
+    <div class="fixed top-0 inset-x-0 z-50 pointer-events-none pt-6">
+      <SiteGrid>
+        <div class="site-col-start-2 site-col-span-1 pointer-events-auto" data-animate="nav-container">
+          <HeroNav />
+        </div>
+      </SiteGrid>
+    </div>
+  )}
+
+  <main class="relative z-10">
+    <Hero />
+    {!site.isUnderConstruction && <Intro />}
+  </main>
+</BaseLayout>
+
+<script>
+  import { initGsap } from '../lib/gsap'
+  const gsap = initGsap()
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  if (!prefersReducedMotion) {
+    // Initialize floating image position matching Figma "Hero" state
+    gsap.set('[data-animate="floating-image"]', {
+      xPercent: -50,
+      x: 299,
+    })
+
+    const introElement = document.querySelector('#intro');
+
+    if (introElement) {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: introElement,
+          start: 'top bottom', // Start animating when intro enters from bottom
+          end: 'top top', // Finish when intro reaches the top
+          scrub: 1, // Smooth scrub
+        },
+      })
+
+      // Background Gradient shifts: Crossfade between Hero (radial) and Intro (linear)
+      tl.to(
+        '[data-animate="hero-gradient"]',
+        {
+          opacity: 0,
+          duration: 1,
+          ease: 'none',
+        },
+        0
+      )
+
+      tl.to(
+        '[data-animate="intro-gradient"]',
+        {
+          opacity: 1,
+          duration: 1,
+          ease: 'none',
+        },
+        0
+      )
+
+      // Image Animation: from right hemisphere (hero) to center (intro)
+      tl.to(
+        '[data-animate="floating-image"]',
+        {
+          height: 859,
+          x: -10.23, // Matches exactly Figma intro state
+          opacity: 0.6,
+          duration: 1,
+          ease: 'power1.inOut',
+        },
+        0
+      )
+
+      // Nav Animation: from col-start-2 to col-start-1
+      tl.to(
+        '[data-animate="nav-container"]',
+        {
+          xPercent: -100,
+          x: -16, // matches --grid-gutter
+          duration: 1,
+          ease: 'power1.inOut',
+        },
+        0
+      )
+
+      // Backdrop Blur effect over the image
+      tl.to(
+        '[data-animate="intro-backdrop"]',
+        {
+          backdropFilter: 'blur(20px)',
+          webkitBackdropFilter: 'blur(20px)',
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          duration: 1,
+          ease: 'power1.inOut',
+        },
+        0
+      )
+
+      // Fade out Hero elements sequentially (bottom to top)
+      tl.to(
+        '[data-animate="hero-cta"]',
+        { opacity: 0, duration: 0.3, ease: 'none' },
+        0
+      )
+      tl.to(
+        '.hero-title-line, [data-animate="hero-sub"]',
+        { opacity: 0, duration: 0.3, ease: 'none' },
+        0.2
+      )
+      tl.to(
+        '[data-animate="hero-tagline"], [data-animate="hero-contact"]',
+        { opacity: 0, duration: 0.3, ease: 'none' },
+        0.4
+      )
+
+      // Fade in Intro elements from bottom
+      tl.fromTo(
+        '[data-animate="intro-text"]',
+        { y: 50, opacity: 0 },
+        { y: 0, opacity: 1, stagger: 0.1, duration: 0.4, ease: 'power2.out' },
+        0.4
+      )
+    }
+  }
+</script>
