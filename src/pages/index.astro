@@ -8,24 +8,19 @@ import { site } from '../data/site'
 ---
 
 <BaseLayout title="Cri Works — Product Designer" description={site.hero.subtitle}>
-  <!-- Intro Background Gradient overlay (Linear) - Starts hidden -->
+  <!-- Accent Gradient Block - Moves upward on scroll -->
   <div
-    class="fixed inset-0 z-0 pointer-events-none opacity-0"
-    style="background: linear-gradient(to bottom, var(--color-accent-medium) 0%, var(--color-background) 100%);"
-    data-animate="intro-gradient"
+    class="fixed inset-x-0 z-0 pointer-events-none"
+    data-animate="accent-gradient-block"
+    style="height: 1900px"
   >
   </div>
 
-  <!-- Hero Background Gradient overlay (Radial) - Starts visible -->
-  <div
-    class="fixed inset-0 z-0 pointer-events-none"
-    style="background: radial-gradient(circle at 60% 30%, var(--color-accent-medium) 0%, var(--color-accent-dark) 70%);"
-    data-animate="hero-gradient"
-  >
-  </div>
+  <!-- Hero Backdrop Blur (blurs the gradient - full in Hero, fades out toward Intro) -->
+  <div class="fixed inset-x-0 z-10 pointer-events-none" data-animate="hero-backdrop" style="height: 1900px"></div>
 
   <!-- Floating Image -->
-  <div class="fixed inset-0 z-0 pointer-events-none overflow-visible">
+  <div class="fixed inset-0 z-20 pointer-events-none overflow-visible">
     <img
       src="/images/cri colored new techblue.png"
       alt=""
@@ -35,26 +30,26 @@ import { site } from '../data/site'
     />
   </div>
 
-  <!-- Backdrop Blur (will fade in on scroll) -->
-  <div
-    class="fixed inset-0 z-5 pointer-events-none"
-    style="backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px)"
-    data-animate="intro-backdrop"
-  >
-  </div>
+  <!-- Intro Backdrop Blur (blurs the image - invisible in Hero, full in Intro) -->
+  <div class="fixed inset-0 z-30 pointer-events-none" data-animate="intro-backdrop"></div>
 
   <!-- Persistent Nav -->
-  {!site.isUnderConstruction && (
-    <div class="fixed top-0 inset-x-0 z-50 pointer-events-none pt-6">
-      <SiteGrid>
-        <div class="site-col-start-2 site-col-span-1 pointer-events-auto" data-animate="nav-container">
-          <HeroNav />
-        </div>
-      </SiteGrid>
-    </div>
-  )}
+  {
+    !site.isUnderConstruction && (
+      <div class="fixed top-0 inset-x-0 z-50 pointer-events-none pt-6">
+        <SiteGrid>
+          <div
+            class="site-col-start-2 site-col-span-1 pointer-events-auto"
+            data-animate="nav-container"
+          >
+            <HeroNav />
+          </div>
+        </SiteGrid>
+      </div>
+    )
+  }
 
-  <main class="relative z-10">
+  <main class="relative z-40">
     <Hero />
     {!site.isUnderConstruction && <Intro />}
   </main>
@@ -73,7 +68,7 @@ import { site } from '../data/site'
       x: 299,
     })
 
-    const introElement = document.querySelector('#intro');
+    const introElement = document.querySelector('#intro')
 
     if (introElement) {
       const tl = gsap.timeline({
@@ -85,23 +80,13 @@ import { site } from '../data/site'
         },
       })
 
-      // Background Gradient shifts: Crossfade between Hero (radial) and Intro (linear)
+      // Accent Gradient Block: Moves upward on scroll
       tl.to(
-        '[data-animate="hero-gradient"]',
+        '[data-animate="accent-gradient-block"]',
         {
-          opacity: 0,
+          y: -1168,
           duration: 1,
-          ease: 'none',
-        },
-        0
-      )
-
-      tl.to(
-        '[data-animate="intro-gradient"]',
-        {
-          opacity: 1,
-          duration: 1,
-          ease: 'none',
+          ease: 'power2.out',
         },
         0
       )
@@ -131,13 +116,22 @@ import { site } from '../data/site'
         0
       )
 
-      // Backdrop Blur effect over the image
+      // Hero Backdrop: blur over the gradient, fades out toward intro
+      tl.to(
+        '[data-animate="hero-backdrop"]',
+        {
+          opacity: 0,
+          duration: 1,
+          ease: 'power1.inOut',
+        },
+        0
+      )
+
+      // Intro Backdrop: blur over the image, fades in toward intro
       tl.to(
         '[data-animate="intro-backdrop"]',
         {
-          backdropFilter: 'blur(20px)',
-          webkitBackdropFilter: 'blur(20px)',
-          backgroundColor: 'rgba(0,0,0,0.5)',
+          opacity: 1,
           duration: 1,
           ease: 'power1.inOut',
         },
@@ -145,11 +139,7 @@ import { site } from '../data/site'
       )
 
       // Fade out Hero elements sequentially (bottom to top)
-      tl.to(
-        '[data-animate="hero-cta"]',
-        { opacity: 0, duration: 0.3, ease: 'none' },
-        0
-      )
+      tl.to('[data-animate="hero-cta"]', { opacity: 0, duration: 0.3, ease: 'none' }, 0)
       tl.to(
         '.hero-title-line, [data-animate="hero-sub"]',
         { opacity: 0, duration: 0.3, ease: 'none' },
