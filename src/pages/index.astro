@@ -53,108 +53,16 @@ import { site } from '../data'
 </BaseLayout>
 
 <script>
-  import { initGsap } from '../lib'
+  import { initGsap, shouldAnimateByPreference, createHeroInitialAnimation, createScrollTimeline } from '../lib'
   const gsap = initGsap()
 
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-  if (!prefersReducedMotion) {
+  if (shouldAnimateByPreference()) {
     // Initialize floating image position matching Figma "Hero" state
-    gsap.set('[data-animate="floating-image"]', {
-      xPercent: -50,
-      x: 299,
-    })
+    createHeroInitialAnimation({ gsap })
 
     const introElement = document.querySelector('#intro')
-
     if (introElement) {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: introElement,
-          start: 'top bottom', // Start animating when intro enters from bottom
-          end: 'top top', // Finish when intro reaches the top
-          scrub: 1, // Smooth scrub
-        },
-      })
-
-      // Accent Gradient Block: Moves upward on scroll
-      tl.to(
-        '[data-animate="accent-gradient-block"]',
-        {
-          y: -1168,
-          duration: 1,
-          ease: 'power2.out',
-        },
-        0
-      )
-
-      // Image Animation: from right hemisphere (hero) to center (intro)
-      tl.to(
-        '[data-animate="floating-image"]',
-        {
-          height: 859,
-          x: -10.23, // Matches exactly Figma intro state
-          opacity: 0.6,
-          duration: 1,
-          ease: 'power1.inOut',
-        },
-        0
-      )
-
-      // Nav Animation: from col-start-2 to col-start-1
-      tl.to(
-        '[data-animate="nav-container"]',
-        {
-          xPercent: -100,
-          x: -16, // matches --grid-gutter
-          duration: 1,
-          ease: 'power1.inOut',
-        },
-        0
-      )
-
-      // Hero Backdrop: blur over the gradient, fades out toward intro
-      tl.to(
-        '[data-animate="hero-backdrop"]',
-        {
-          opacity: 0,
-          duration: 1,
-          ease: 'linear',
-        },
-        0
-      )
-
-      // Intro Backdrop: blur over the image, fades in toward intro
-      tl.to(
-        '[data-animate="intro-backdrop"]',
-        {
-          opacity: 1,
-          duration: 1,
-          ease: 'linear',
-        },
-        0
-      )
-
-      // Fade out Hero elements sequentially (bottom to top)
-      tl.to('[data-animate="hero-cta"]', { opacity: 0, duration: 0.3, ease: 'none' }, 0)
-      tl.to(
-        '.hero-title-line, [data-animate="hero-sub"]',
-        { opacity: 0, duration: 0.3, ease: 'none' },
-        0.2
-      )
-      tl.to(
-        '[data-animate="hero-tagline"], [data-animate="hero-contact"]',
-        { opacity: 0, duration: 0.3, ease: 'none' },
-        0.4
-      )
-
-      // Fade in Intro elements from bottom
-      tl.fromTo(
-        '[data-animate="intro-text"]',
-        { y: 50, opacity: 0 },
-        { y: 0, opacity: 1, stagger: 0.1, duration: 0.4, ease: 'power2.out' },
-        0.4
-      )
+      createScrollTimeline({ gsap, trigger: introElement })
     }
   }
 </script>
