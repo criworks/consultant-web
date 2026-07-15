@@ -1,5 +1,5 @@
 import type gsapInstance from 'gsap';
-import { ANIMATION_TIMINGS, ANIMATION_EASING, ANIMATION_DELAYS, FLOATING_IMAGE_INITIAL } from '../constants';
+import { ANIMATION_TIMINGS, ANIMATION_EASING, ANIMATION_DELAYS, FLOATING_IMAGE_INITIAL } from '@/lib/constants';
 
 export interface HeroAnimationConfig {
   gsap: typeof gsapInstance;

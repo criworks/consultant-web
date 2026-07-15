@@ -1,4 +1,4 @@
-export type { ScrollAnimationConfig } from './scroll';
-export { createScrollTimeline } from './scroll';
-export type { HeroAnimationConfig } from './hero';
-export { createHeroTimeline, createHeroInitialAnimation } from './hero';
+export type { ScrollAnimationConfig } from '@/lib/animations/scroll';
+export { createScrollTimeline } from '@/lib/animations/scroll';
+export type { HeroAnimationConfig } from '@/lib/animations/hero';
+export { createHeroTimeline, createHeroInitialAnimation } from '@/lib/animations/hero';

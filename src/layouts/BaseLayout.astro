@@ -1,5 +1,5 @@
 ---
-import '../styles/global.css';
+import '@/styles/global.css';
 
 interface Props {
 	title?: string;
@@ -27,7 +27,7 @@ const pageTitle = Astro.url.pathname === '/' ? title : `${title} · Cri Works`;
 	<body class="min-h-dvh bg-background text-foreground antialiased">
 	        <slot />
 	        <script>
-	                import { initLenis } from '../lib/lenis';
+	                import { initLenis } from '@/lib';
 	                initLenis();
 	        </script>
 	</body></html>

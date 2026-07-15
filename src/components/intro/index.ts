@@ -1,1 +1,1 @@
-export { default as Intro } from './Intro.astro';
+export { default as Intro } from '@/components/intro/Intro.astro';

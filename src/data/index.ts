@@ -1,1 +1,1 @@
-export { site } from './site';
+export { site } from '@/data/site';

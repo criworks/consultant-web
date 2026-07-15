@@ -1,8 +1,8 @@
 // Hero components
-export * from './hero/index';
+export * from '@/components/hero';
 
 // Grid components
-export * from './grid/index';
+export * from '@/components/grid';
 
 // Intro components
-export * from './intro/index';
+export * from '@/components/intro';

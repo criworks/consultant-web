@@ -1,7 +1,7 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro'
-import { Hero, Intro, SiteGrid, HeroNav } from '../components'
-import { site } from '../data'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import { Hero, Intro, SiteGrid, HeroNav } from '@/components'
+import { site } from '@/data'
 ---
 
 <BaseLayout title="Cri Works — Product Designer" description={site.hero.subtitle}>
@@ -53,7 +53,7 @@ import { site } from '../data'
 </BaseLayout>
 
 <script>
-  import { initGsap, shouldAnimateByPreference, createHeroInitialAnimation, createScrollTimeline } from '../lib'
+  import { initGsap, shouldAnimateByPreference, createHeroInitialAnimation, createScrollTimeline } from '@/lib'
   const gsap = initGsap()
 
   if (shouldAnimateByPreference()) {

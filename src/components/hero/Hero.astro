@@ -1,6 +1,6 @@
 ---
-import { SiteGrid } from '../grid'
-import { HeroHeader, HeroTitle, HeroCta } from './index'
+import { SiteGrid } from '@/components/grid'
+import { HeroHeader, HeroTitle, HeroCta } from '@/components/hero'
 ---
 
 <section id="hero" class="sticky top-0 h-dvh text-foreground overflow-hidden">
@@ -19,7 +19,7 @@ import { HeroHeader, HeroTitle, HeroCta } from './index'
 </section>
 
 <script>
-  import { initGsap, shouldAnimateByPreference, createHeroTimeline } from '../../lib'
+  import { initGsap, shouldAnimateByPreference, createHeroTimeline } from '@/lib'
 
   const gsap = initGsap()
 

@@ -1,5 +1,5 @@
 import type gsapInstance from 'gsap';
-import { ANIMATION_TIMINGS, ANIMATION_EASING, SCROLL_TRANSFORMS } from '../constants';
+import { ANIMATION_TIMINGS, ANIMATION_EASING, SCROLL_TRANSFORMS } from '@/lib/constants';
 
 export interface ScrollAnimationConfig {
   gsap: typeof gsapInstance;
