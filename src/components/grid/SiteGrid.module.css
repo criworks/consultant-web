@@ -1,0 +1,9 @@
+/* SiteGrid component - CSS Module with scoped class names */
+
+.grid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  column-gap: var(--grid-gutter);
+  padding-inline: var(--grid-margin);
+}

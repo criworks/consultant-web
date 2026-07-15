@@ -1,0 +1,48 @@
+/* Hero component styles - scoped to component */
+
+.section {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  color: var(--color-foreground);
+  overflow: hidden;
+}
+
+.grid {
+  position: relative;
+  z-index: 10;
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding-bottom: 1rem;
+}
+
+.content {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  column-gap: var(--grid-gutter);
+  padding-inline: var(--grid-margin);
+}
+
+.contentInner {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  justify-content: flex-end;
+  grid-column-start: 1;
+  grid-column-end: span 16;
+}
+
+.contentItems {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+@media (width >= 64rem) {
+  .contentInner {
+    grid-column-start: 2;
+    grid-column-end: span 10;
+  }
+}
