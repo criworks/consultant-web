@@ -2,7 +2,7 @@ export const site = {
   name: 'Cri Works',
   email: 'cri@cri.works',
   tagline: 'Cri Works. Product Designer en Santiago, Chile.',
-  isUnderConstruction: true, // Temporal flag for the launch
+  isUnderConstruction: false, // Temporal flag for the launch
   hero: {
     title: 'Cri Works',
     subtitle: 'Diseño productos que dan claridad y criterio a startups tecnológicas',
