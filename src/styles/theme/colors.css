@@ -1,0 +1,12 @@
+@theme {
+  --font-sans: 'Switzer', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Switzer', ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: #000000;
+  --color-foreground: #ffffff;
+  --color-accent: #8dcde3;
+  --color-accent-medium: rgba(67, 141, 165, 1);
+  --color-accent-dark: rgba(43, 85, 104, 1);
+  --color-muted: rgba(255, 255, 255, 0.7);
+  --color-border: rgba(255, 255, 255, 0.1);
+}

@@ -1,0 +1,11 @@
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-variation-settings: 'wght' 600;
+  }
+}

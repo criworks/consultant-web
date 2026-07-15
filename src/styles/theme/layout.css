@@ -1,0 +1,6 @@
+/* 16-column layout grid: margin 16px (padding-inline), gutter 16px (column-gap), stretch columns */
+:root {
+  --grid-columns: 16;
+  --grid-margin: 16px;
+  --grid-gutter: 16px;
+}

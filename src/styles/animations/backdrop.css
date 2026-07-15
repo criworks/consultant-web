@@ -1,0 +1,27 @@
+/* Accent Gradient Block - Fixed height, moves upward on scroll */
+[data-animate='accent-gradient-block'] {
+  background: linear-gradient(
+    to bottom,
+    rgba(67, 141, 165, 0) 30%,
+    rgba(67, 141, 165, 1) 55%,
+    rgba(67, 141, 165, 0) 100%
+  ) !important;
+}
+
+/* Backdrop Blur effect - shared styles for hero and intro backdrops */
+[data-animate='hero-backdrop'],
+[data-animate='intro-backdrop'] {
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  background-color: rgba(255, 255, 255, 0.01);
+}
+
+/* Hero Backdrop: blurea el gradient (full en Hero, se desvanece hacia Intro) */
+[data-animate='hero-backdrop'] {
+  opacity: 1;
+}
+
+/* Intro Backdrop: blurea la imagen (invisible en Hero, full en Intro) */
+[data-animate='intro-backdrop'] {
+  opacity: 0;
+}
