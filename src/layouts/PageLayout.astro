@@ -1,0 +1,19 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { SiteGrid } from '@/components/grid';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <SiteGrid>
+    <div class="site-col-start-1 site-col-span-16">
+      <slot />
+    </div>
+  </SiteGrid>
+</BaseLayout>
