@@ -1,10 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
-import Hero from '../components/hero/Hero.astro'
-import Intro from '../components/intro/Intro.astro'
-import SiteGrid from '../components/grid/SiteGrid.astro'
-import HeroNav from '../components/hero/HeroNav.astro'
-import { site } from '../data/site'
+import { Hero, Intro, SiteGrid, HeroNav } from '../components'
+import { site } from '../data'
 ---
 
 <BaseLayout title="Cri Works — Product Designer" description={site.hero.subtitle}>
@@ -56,7 +53,7 @@ import { site } from '../data/site'
 </BaseLayout>
 
 <script>
-  import { initGsap } from '../lib/gsap'
+  import { initGsap } from '../lib'
   const gsap = initGsap()
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
