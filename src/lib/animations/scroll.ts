@@ -1,8 +1,8 @@
-import type gsapInstance from 'gsap';
-import { ANIMATION_TIMINGS, ANIMATION_EASING, SCROLL_TRANSFORMS } from '@/lib/constants';
+import type { gsap as GsapType } from 'gsap';
+import { ANIMATION_TIMINGS, ANIMATION_EASING, ANIMATION_DELAYS, SCROLL_TRANSFORMS } from '@/lib/constants';
 
 export interface ScrollAnimationConfig {
-  gsap: typeof gsapInstance;
+  gsap: typeof GsapType;
   trigger: Element;
 }
 
@@ -13,7 +13,7 @@ export interface ScrollAnimationConfig {
 export function createScrollTimeline({
   gsap,
   trigger,
-}: ScrollAnimationConfig): gsapInstance.core.Timeline {
+}: ScrollAnimationConfig): ReturnType<typeof GsapType.timeline> {
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger,
@@ -101,7 +101,7 @@ export function createScrollTimeline({
     {
       y: 0,
       opacity: 1,
-      stagger: ANIMATION_TIMINGS.STAGGER,
+      stagger: ANIMATION_DELAYS.STAGGER,
       duration: ANIMATION_TIMINGS.NORMAL,
       ease: ANIMATION_EASING.POWER_OUT,
     },

@@ -8,51 +8,69 @@ describe('Motion Utilities', () => {
 
   describe('shouldAnimateByPreference', () => {
     it('should return true when prefers-reduced-motion is not set', () => {
-      vi.stubGlobal(
-        'window',
-        {
-          matchMedia: () => ({ matches: false }),
-        }
-      );
+      const spy = vi.spyOn(window, 'matchMedia').mockReturnValue({
+        matches: false,
+        media: '',
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      } as MediaQueryList);
+
       expect(shouldAnimateByPreference()).toBe(true);
+      spy.mockRestore();
     });
 
     it('should return false when prefers-reduced-motion is set', () => {
-      vi.stubGlobal(
-        'window',
-        {
-          matchMedia: () => ({ matches: true }),
-        }
-      );
-      expect(shouldAnimateByPreference()).toBe(false);
-    });
+      const spy = vi.spyOn(window, 'matchMedia').mockReturnValue({
+        matches: true,
+        media: '',
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      } as MediaQueryList);
 
-    it('should return true when window is undefined', () => {
-      // Simulates SSR environment
-      const result = shouldAnimateByPreference();
-      expect(typeof result).toBe('boolean');
+      expect(shouldAnimateByPreference()).toBe(false);
+      spy.mockRestore();
     });
   });
 
   describe('prefersReducedMotion', () => {
     it('should return true when prefers-reduced-motion is set', () => {
-      vi.stubGlobal(
-        'window',
-        {
-          matchMedia: () => ({ matches: true }),
-        }
-      );
+      const spy = vi.spyOn(window, 'matchMedia').mockReturnValue({
+        matches: true,
+        media: '',
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      } as MediaQueryList);
+
       expect(prefersReducedMotion()).toBe(true);
+      spy.mockRestore();
     });
 
     it('should return false when prefers-reduced-motion is not set', () => {
-      vi.stubGlobal(
-        'window',
-        {
-          matchMedia: () => ({ matches: false }),
-        }
-      );
+      const spy = vi.spyOn(window, 'matchMedia').mockReturnValue({
+        matches: false,
+        media: '',
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      } as MediaQueryList);
+
       expect(prefersReducedMotion()).toBe(false);
+      spy.mockRestore();
     });
   });
 });

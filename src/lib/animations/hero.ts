@@ -1,15 +1,15 @@
-import type gsapInstance from 'gsap';
+import type { gsap as GsapType } from 'gsap';
 import { ANIMATION_TIMINGS, ANIMATION_EASING, ANIMATION_DELAYS, FLOATING_IMAGE_INITIAL } from '@/lib/constants';
 
 export interface HeroAnimationConfig {
-  gsap: typeof gsapInstance;
+  gsap: typeof GsapType;
 }
 
 /**
  * Creates hero section initial load animation timeline
  * Animates: title lines, subtitle, nav, tagline, contact, CTA
  */
-export function createHeroTimeline({ gsap }: HeroAnimationConfig): gsapInstance.core.Timeline {
+export function createHeroTimeline({ gsap }: HeroAnimationConfig): ReturnType<typeof GsapType.timeline> {
   const tl = gsap.timeline({ defaults: { ease: ANIMATION_EASING.EASE_OUT_STRONG } });
 
   tl.from('.hero-title-line', {
