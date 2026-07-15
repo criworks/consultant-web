@@ -11,9 +11,25 @@
       "@/styles": ["src/styles"],
       "@/styles/*": ["src/styles/*"],
       "@/data": ["src/data"],
-      "@/layouts": ["src/layouts"]
-    }
+      "@/layouts": ["src/layouts"],
+      "@/types": ["src/types"]
+    },
+    "strict": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+  "exclude": ["dist", "node_modules"]
 }
