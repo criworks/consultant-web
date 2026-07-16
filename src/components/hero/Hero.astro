@@ -9,23 +9,25 @@ import { site } from '@/data'
     <HeroHeader />
 
     <!-- Subtitle -->
-    <div class="site-col-start-4 site-col-span-10 flex min-h-0 flex-col justify-end">
+    <div class="site-col-start-4 site-col-span-10 flex min-h-0 flex-col justify-end pb-20">
       <HeroTitle />
     </div>
 
-    <!-- Title + CTA side by side -->
-    <div class="site-col-start-4 site-col-span-13 flex min-h-0 flex-col justify-end">
-      <div class="flex items-end gap-6">
-        <h1 class="text-foreground flex-1">
-          <span
-            class="hero-title-line block text-[clamp(4rem,12vw,8.75rem)] leading-[0.9] tracking-[-0.02em]"
-            data-animate="hero-title"
-          >
-            {site.hero.title}
-          </span>
-        </h1>
-        <HeroCta />
-      </div>
+    <!-- Title (col 4-10) -->
+    <div class="site-col-start-4 site-col-span-7 flex min-h-0 flex-col justify-end">
+      <h1 class="text-foreground">
+        <span
+          class="hero-title-line block text-[clamp(4rem,12vw,8.75rem)] leading-[0.9] tracking-[-0.02em]"
+          data-animate="hero-title"
+        >
+          {site.hero.title}
+        </span>
+      </h1>
+    </div>
+
+    <!-- CTA (col 11+) -->
+    <div class="site-col-start-11 site-col-span-6 flex min-h-0 flex-col justify-end">
+      <HeroCta />
     </div>
   </SiteGrid>
 </section>
