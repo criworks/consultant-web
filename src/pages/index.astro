@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro'
-import { Hero, Intro, SiteGrid, HeroNav } from '@/components'
+import { Hero, Intro } from '@/components'
 import { site } from '@/data'
 ---
 
@@ -40,20 +40,6 @@ import { site } from '@/data'
   >
   </div>
 
-  <!-- Persistent Nav -->
-  {
-    !site.isUnderConstruction && (
-      <div class="fixed top-0 inset-x-0 z-50 pointer-events-none pt-6">
-        <SiteGrid>
-          <div
-            class="site-col-start-1 site-col-span-1 pointer-events-auto"
-          >
-            <HeroNav />
-          </div>
-        </SiteGrid>
-      </div>
-    )
-  }
 
   <main class="relative z-40">
     <Hero />

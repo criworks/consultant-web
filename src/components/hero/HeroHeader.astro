@@ -1,19 +1,20 @@
 ---
 import { site } from '../../data/site'
-import SiteGrid from '../grid/SiteGrid.astro'
+import HeroNav from './HeroNav.astro'
 import HeroContact from './HeroContact.astro'
 ---
 
 <header
-  class="site-col-start-1 site-col-span-16 flex flex-col pt-6 lg:flex-row lg:items-start lg:justify-between"
+  class="site-col-start-1 site-col-span-32 flex flex-col pt-6 lg:flex-row lg:items-start lg:justify-between"
 >
-  <SiteGrid class="px-0">
-    <p
-      class="text-base leading-none text-accent lg:pt-0.5 site-col-start-2 site-col-span-11"
-      data-animate="hero-tagline"
-    >
-      {site.tagline}
-    </p>
-    <HeroContact />
-  </SiteGrid>
+  <div class="site-col-start-1 site-col-span-1">
+    <HeroNav />
+  </div>
+  <p
+    class="text-base leading-none text-accent lg:pt-0.5 site-col-start-4 site-col-span-11"
+    data-animate="hero-tagline"
+  >
+    {site.tagline}
+  </p>
+  <HeroContact />
 </header>
