@@ -48,34 +48,23 @@ export function createScrollTimeline({
       x: SCROLL_TRANSFORMS.FLOATING_IMAGE_X,
       opacity: SCROLL_TRANSFORMS.FLOATING_IMAGE_OPACITY,
       filter: 'blur(15px)',
-      duration: ANIMATION_TIMINGS.SLOWEST * 0.35,
+      duration: ANIMATION_TIMINGS.SLOWEST,
       ease: ANIMATION_EASING.POWER_OUT,
     },
     0
-  );
+  )
 
   // Phase 2: Smooth blur completion (15px → 25px)
   tl.to(
     '[data-animate="floating-image"]',
     {
       filter: 'blur(25px)',
-      duration: ANIMATION_TIMINGS.SLOWEST * 0.65,
+      duration: ANIMATION_TIMINGS.SLOWEST,
       ease: ANIMATION_EASING.LINEAR,
     },
     ANIMATION_TIMINGS.SLOWEST * 0.35
-  );
-
-  // Nav Animation: from col-start-2 to col-start-1
-  tl.to(
-    '[data-animate="nav-container"]',
-    {
-      xPercent: SCROLL_TRANSFORMS.NAV_XPERCENT,
-      x: SCROLL_TRANSFORMS.NAV_X,
-      duration: ANIMATION_TIMINGS.SLOWEST,
-      ease: ANIMATION_EASING.EASE_INOUT_SUBTLE,
-    },
-    0
   )
+
 
   // Hero Backdrop: blur over the gradient, fades out toward intro
   tl.to(
