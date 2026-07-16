@@ -8,7 +8,7 @@ import { HeroHeader, HeroTitle, HeroCta } from '@/components/hero'
     <HeroHeader />
 
     <div
-      class="site-col-start-1 site-col-span-16 flex min-h-0 flex-col justify-end lg:site-col-start-2 lg:site-col-span-10"
+      class="site-col-start-4 site-col-span-13 flex min-h-0 flex-col justify-end"
     >
       <div class="flex flex-col gap-10">
         <HeroTitle />
@@ -19,7 +19,7 @@ import { HeroHeader, HeroTitle, HeroCta } from '@/components/hero'
 </section>
 
 <script>
-  import { initGsap, shouldAnimateByPreference, createHeroTimeline } from '@/lib'
+  import { createHeroTimeline, initGsap, shouldAnimateByPreference } from '@/lib'
 
   const gsap = initGsap()
 
