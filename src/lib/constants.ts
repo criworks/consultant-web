@@ -4,7 +4,7 @@ export const ANIMATION_TIMINGS = {
   NORMAL: 0.6,
   SLOW: 0.8,
   SLOWEST: 1,
-} as const;
+} as const
 
 export const ANIMATION_EASING = {
   POWER_IN: 'power2.in',
@@ -13,32 +13,32 @@ export const ANIMATION_EASING = {
   LINEAR: 'linear',
   EASE_OUT_STRONG: 'power3.out',
   EASE_INOUT_SUBTLE: 'power1.inOut',
-} as const;
+} as const
 
 export const ANIMATION_DELAYS = {
   STAGGER: 0.08,
   STAGGER_TITLE: 0.12,
-} as const;
+} as const
 
 /* Grid configuration */
 export const GRID_CONFIG = {
-  COLUMNS: 16,
-  MARGIN: '16px',
+  COLUMNS: 32,
+  MARGIN: '40px',
   GUTTER: '16px',
-} as const;
+} as const
 
 /* Scroll animation transforms */
 export const SCROLL_TRANSFORMS = {
   ACCENT_BLOCK_Y: -1168,
-  FLOATING_IMAGE_HEIGHT: 859,
-  FLOATING_IMAGE_X: -10.23,
+  FLOATING_IMAGE_HEIGHT: 860,
+  FLOATING_IMAGE_X: 60,
   FLOATING_IMAGE_OPACITY: 0.6,
   NAV_XPERCENT: -100,
   NAV_X: -16,
-} as const;
+} as const
 
 /* Floating image initial position */
 export const FLOATING_IMAGE_INITIAL = {
   X_PERCENT: -50,
-  X: 299,
-} as const;
+  X: 300,
+} as const

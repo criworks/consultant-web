@@ -11,7 +11,7 @@
 
 /* site-col-* avoids Tailwind's built-in col-span (grid-column shorthand) */
 @layer utilities {
-  /* Column start utilities (1-16) */
+  /* Column start utilities (1-32) */
   .site-col-start-1 { grid-column-start: 1; }
   .site-col-start-2 { grid-column-start: 2; }
   .site-col-start-3 { grid-column-start: 3; }
@@ -28,8 +28,24 @@
   .site-col-start-14 { grid-column-start: 14; }
   .site-col-start-15 { grid-column-start: 15; }
   .site-col-start-16 { grid-column-start: 16; }
+  .site-col-start-17 { grid-column-start: 17; }
+  .site-col-start-18 { grid-column-start: 18; }
+  .site-col-start-19 { grid-column-start: 19; }
+  .site-col-start-20 { grid-column-start: 20; }
+  .site-col-start-21 { grid-column-start: 21; }
+  .site-col-start-22 { grid-column-start: 22; }
+  .site-col-start-23 { grid-column-start: 23; }
+  .site-col-start-24 { grid-column-start: 24; }
+  .site-col-start-25 { grid-column-start: 25; }
+  .site-col-start-26 { grid-column-start: 26; }
+  .site-col-start-27 { grid-column-start: 27; }
+  .site-col-start-28 { grid-column-start: 28; }
+  .site-col-start-29 { grid-column-start: 29; }
+  .site-col-start-30 { grid-column-start: 30; }
+  .site-col-start-31 { grid-column-start: 31; }
+  .site-col-start-32 { grid-column-start: 32; }
 
-  /* Column span utilities (1-16) */
+  /* Column span utilities (1-32) */
   .site-col-span-1 { grid-column-end: span 1; }
   .site-col-span-2 { grid-column-end: span 2; }
   .site-col-span-3 { grid-column-end: span 3; }
@@ -46,6 +62,22 @@
   .site-col-span-14 { grid-column-end: span 14; }
   .site-col-span-15 { grid-column-end: span 15; }
   .site-col-span-16 { grid-column-end: span 16; }
+  .site-col-span-17 { grid-column-end: span 17; }
+  .site-col-span-18 { grid-column-end: span 18; }
+  .site-col-span-19 { grid-column-end: span 19; }
+  .site-col-span-20 { grid-column-end: span 20; }
+  .site-col-span-21 { grid-column-end: span 21; }
+  .site-col-span-22 { grid-column-end: span 22; }
+  .site-col-span-23 { grid-column-end: span 23; }
+  .site-col-span-24 { grid-column-end: span 24; }
+  .site-col-span-25 { grid-column-end: span 25; }
+  .site-col-span-26 { grid-column-end: span 26; }
+  .site-col-span-27 { grid-column-end: span 27; }
+  .site-col-span-28 { grid-column-end: span 28; }
+  .site-col-span-29 { grid-column-end: span 29; }
+  .site-col-span-30 { grid-column-end: span 30; }
+  .site-col-span-31 { grid-column-end: span 31; }
+  .site-col-span-32 { grid-column-end: span 32; }
 
   /* Large breakpoint: lg: prefixed utilities */
   @media (width >= 64rem) {
@@ -65,6 +97,22 @@
     .lg\:site-col-start-14 { grid-column-start: 14; }
     .lg\:site-col-start-15 { grid-column-start: 15; }
     .lg\:site-col-start-16 { grid-column-start: 16; }
+    .lg\:site-col-start-17 { grid-column-start: 17; }
+    .lg\:site-col-start-18 { grid-column-start: 18; }
+    .lg\:site-col-start-19 { grid-column-start: 19; }
+    .lg\:site-col-start-20 { grid-column-start: 20; }
+    .lg\:site-col-start-21 { grid-column-start: 21; }
+    .lg\:site-col-start-22 { grid-column-start: 22; }
+    .lg\:site-col-start-23 { grid-column-start: 23; }
+    .lg\:site-col-start-24 { grid-column-start: 24; }
+    .lg\:site-col-start-25 { grid-column-start: 25; }
+    .lg\:site-col-start-26 { grid-column-start: 26; }
+    .lg\:site-col-start-27 { grid-column-start: 27; }
+    .lg\:site-col-start-28 { grid-column-start: 28; }
+    .lg\:site-col-start-29 { grid-column-start: 29; }
+    .lg\:site-col-start-30 { grid-column-start: 30; }
+    .lg\:site-col-start-31 { grid-column-start: 31; }
+    .lg\:site-col-start-32 { grid-column-start: 32; }
 
     .lg\:site-col-span-1 { grid-column-end: span 1; }
     .lg\:site-col-span-2 { grid-column-end: span 2; }
@@ -82,5 +130,21 @@
     .lg\:site-col-span-14 { grid-column-end: span 14; }
     .lg\:site-col-span-15 { grid-column-end: span 15; }
     .lg\:site-col-span-16 { grid-column-end: span 16; }
+    .lg\:site-col-span-17 { grid-column-end: span 17; }
+    .lg\:site-col-span-18 { grid-column-end: span 18; }
+    .lg\:site-col-span-19 { grid-column-end: span 19; }
+    .lg\:site-col-span-20 { grid-column-end: span 20; }
+    .lg\:site-col-span-21 { grid-column-end: span 21; }
+    .lg\:site-col-span-22 { grid-column-end: span 22; }
+    .lg\:site-col-span-23 { grid-column-end: span 23; }
+    .lg\:site-col-span-24 { grid-column-end: span 24; }
+    .lg\:site-col-span-25 { grid-column-end: span 25; }
+    .lg\:site-col-span-26 { grid-column-end: span 26; }
+    .lg\:site-col-span-27 { grid-column-end: span 27; }
+    .lg\:site-col-span-28 { grid-column-end: span 28; }
+    .lg\:site-col-span-29 { grid-column-end: span 29; }
+    .lg\:site-col-span-30 { grid-column-end: span 30; }
+    .lg\:site-col-span-31 { grid-column-end: span 31; }
+    .lg\:site-col-span-32 { grid-column-end: span 32; }
   }
 }
