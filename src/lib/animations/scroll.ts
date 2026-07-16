@@ -40,17 +40,30 @@ export function createScrollTimeline({
   )
 
   // Image Animation: from right hemisphere (hero) to center (intro)
+  // Phase 1: Fast blur activation (0 → 15px)
   tl.to(
     '[data-animate="floating-image"]',
     {
       height: SCROLL_TRANSFORMS.FLOATING_IMAGE_HEIGHT,
       x: SCROLL_TRANSFORMS.FLOATING_IMAGE_X,
       opacity: SCROLL_TRANSFORMS.FLOATING_IMAGE_OPACITY,
-      duration: ANIMATION_TIMINGS.SLOWEST,
-      ease: ANIMATION_EASING.EASE_INOUT_SUBTLE,
+      filter: 'blur(15px)',
+      duration: ANIMATION_TIMINGS.SLOWEST * 0.35,
+      ease: ANIMATION_EASING.POWER_OUT,
     },
     0
-  )
+  );
+
+  // Phase 2: Smooth blur completion (15px → 25px)
+  tl.to(
+    '[data-animate="floating-image"]',
+    {
+      filter: 'blur(25px)',
+      duration: ANIMATION_TIMINGS.SLOWEST * 0.65,
+      ease: ANIMATION_EASING.LINEAR,
+    },
+    ANIMATION_TIMINGS.SLOWEST * 0.35
+  );
 
   // Nav Animation: from col-start-2 to col-start-1
   tl.to(
