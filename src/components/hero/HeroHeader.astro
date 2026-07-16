@@ -1,20 +1,21 @@
 ---
 import { site } from '../../data/site'
-import HeroNav from './HeroNav.astro'
 import HeroContact from './HeroContact.astro'
+import HeroNav from './HeroNav.astro'
 ---
 
 <header
-  class="site-col-start-1 site-col-span-32 flex flex-col pt-6 lg:flex-row lg:items-start lg:justify-between"
+  class="site-col-start-1 site-col-span-32 grid grid-cols-[repeat(var(--grid-columns),minmax(0,1fr))] gap-[var(--grid-gutter)] pt-10"
 >
   <div class="site-col-start-1 site-col-span-1">
     <HeroNav />
   </div>
-  <p
-    class="text-base leading-none text-accent lg:pt-0.5 site-col-start-4 site-col-span-11"
-    data-animate="hero-tagline"
-  >
-    {site.tagline}
-  </p>
-  <HeroContact />
+  <div class="site-col-start-4 site-col-span-1">
+    <p class="text-base leading-none text-accent lg:pt-0.5" data-animate="hero-tagline">
+      {site.tagline}
+    </p>
+  </div>
+  <div class="site-col-start-32 site-col-span-1">
+    <HeroContact />
+  </div>
 </header>
