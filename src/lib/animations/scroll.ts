@@ -34,17 +34,30 @@ export function createScrollTimeline({
     0
   );
 
-  // Image Animation: from right hemisphere (hero) to center (intro)
+  // Image Animation: from right hemisphere (hero) to center (intro) + blur effect
+  // Phase 1: Fast blur activation (0 → 15px)
   tl.to(
     '[data-animate="floating-image"]',
     {
       height: SCROLL_TRANSFORMS.FLOATING_IMAGE_HEIGHT,
       x: SCROLL_TRANSFORMS.FLOATING_IMAGE_X,
       opacity: SCROLL_TRANSFORMS.FLOATING_IMAGE_OPACITY,
-      duration: ANIMATION_TIMINGS.SLOWEST,
+      filter: 'blur(15px)',
+      duration: ANIMATION_TIMINGS.SLOWEST * 0.35,
       ease: ANIMATION_EASING.EASE_INOUT_SUBTLE,
     },
     0
+  );
+
+  // Phase 2: Smooth blur completion (15px → 25px)
+  tl.to(
+    '[data-animate="floating-image"]',
+    {
+      filter: 'blur(25px)',
+      duration: ANIMATION_TIMINGS.SLOWEST * 0.65,
+      ease: ANIMATION_EASING.LINEAR,
+    },
+    ANIMATION_TIMINGS.SLOWEST * 0.35
   );
 
   // Nav Animation: from col-start-2 to col-start-1
@@ -70,15 +83,28 @@ export function createScrollTimeline({
     0
   );
 
-  // Intro Backdrop: blur over the image, fades in toward intro
+  // Intro Backdrop Phase 1: Fast blur activation (0 → 25px blur, 0 → 0.6 opacity)
+  tl.to(
+    '[data-animate="intro-backdrop"]',
+    {
+      opacity: 0.6,
+      filter: 'blur(25px)',
+      duration: ANIMATION_TIMINGS.SLOWEST * 0.35,
+      ease: ANIMATION_EASING.POWER_OUT,
+    },
+    0
+  );
+
+  // Intro Backdrop Phase 2: Smooth completion (25px → 40px blur, 0.6 → 1 opacity)
   tl.to(
     '[data-animate="intro-backdrop"]',
     {
       opacity: 1,
-      duration: ANIMATION_TIMINGS.SLOWEST,
+      filter: 'blur(40px)',
+      duration: ANIMATION_TIMINGS.SLOWEST * 0.65,
       ease: ANIMATION_EASING.LINEAR,
     },
-    0
+    ANIMATION_TIMINGS.SLOWEST * 0.35
   );
 
   // Fade out Hero elements sequentially (bottom to top)

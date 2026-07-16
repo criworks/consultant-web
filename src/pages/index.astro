@@ -14,7 +14,12 @@ import { site } from '@/data'
   </div>
 
   <!-- Hero Backdrop Blur (blurs the gradient - full in Hero, fades out toward Intro) -->
-  <div class="fixed inset-x-0 z-10 pointer-events-none" data-animate="hero-backdrop" style="height: 1900px"></div>
+  <div
+    class="fixed inset-x-0 z-10 pointer-events-none"
+    data-animate="hero-backdrop"
+    style="height: 1900px"
+  >
+  </div>
 
   <!-- Floating Image -->
   <div class="fixed inset-0 z-20 pointer-events-none overflow-visible">
@@ -28,7 +33,12 @@ import { site } from '@/data'
   </div>
 
   <!-- Intro Backdrop Blur (blurs the image - invisible in Hero, full in Intro) -->
-  <div class="fixed inset-0 z-30 pointer-events-none" data-animate="intro-backdrop"></div>
+  <div
+    class="fixed inset-0 z-30 pointer-events-none"
+    data-animate="intro-backdrop"
+    style="height: 1900px"
+  >
+  </div>
 
   <!-- Persistent Nav -->
   {
@@ -53,7 +63,12 @@ import { site } from '@/data'
 </BaseLayout>
 
 <script>
-  import { initGsap, shouldAnimateByPreference, createHeroInitialAnimation, createScrollTimeline } from '@/lib'
+  import {
+    createHeroInitialAnimation,
+    createScrollTimeline,
+    initGsap,
+    shouldAnimateByPreference,
+  } from '@/lib'
   const gsap = initGsap()
 
   if (shouldAnimateByPreference()) {

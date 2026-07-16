@@ -24,4 +24,5 @@
 /* Intro Backdrop: blurea la imagen (invisible en Hero, full en Intro) */
 [data-animate='intro-backdrop'] {
   opacity: 0;
+  filter: blur(0px);
 }
