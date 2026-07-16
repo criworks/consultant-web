@@ -1,17 +1,29 @@
 ---
 import { SiteGrid } from '@/components/grid'
 import { HeroHeader, HeroTitle, HeroCta } from '@/components/hero'
+import { site } from '@/data'
 ---
 
 <section id="hero" class="sticky top-0 h-dvh text-foreground overflow-hidden">
   <SiteGrid class="relative z-10 h-dvh grid-rows-[auto_1fr_auto] pb-4">
     <HeroHeader />
 
-    <div
-      class="site-col-start-4 site-col-span-13 flex min-h-0 flex-col justify-end"
-    >
-      <div class="flex flex-col gap-10">
-        <HeroTitle />
+    <!-- Subtitle -->
+    <div class="site-col-start-4 site-col-span-10 flex min-h-0 flex-col justify-end">
+      <HeroTitle />
+    </div>
+
+    <!-- Title + CTA side by side -->
+    <div class="site-col-start-4 site-col-span-13 flex min-h-0 flex-col justify-end">
+      <div class="flex items-end gap-6">
+        <h1 class="text-foreground flex-1">
+          <span
+            class="hero-title-line block text-[clamp(4rem,12vw,8.75rem)] leading-[0.9] tracking-[-0.02em]"
+            data-animate="hero-title"
+          >
+            {site.hero.title}
+          </span>
+        </h1>
         <HeroCta />
       </div>
     </div>
