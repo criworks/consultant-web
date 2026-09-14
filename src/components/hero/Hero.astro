@@ -1,8 +1,8 @@
 ---
 import { SiteGrid } from '@/components/grid'
 import { SiteHeader } from '@/components/header'
+import { Link } from '@/components/ui'
 import { site } from '@/data'
-import { ArrowDown, ArrowUpRight } from '@lucide/astro'
 ---
 
 <section id="hero" class="sticky top-0 h-dvh text-foreground overflow-hidden">
@@ -23,19 +23,9 @@ import { ArrowDown, ArrowUpRight } from '@lucide/astro'
         </span>
       </h1>
       <div class="flex items-center gap-11" data-animate="hero-social">
-        {
-          site.social.map(link => (
-            <a
-              href={link.href}
-              class="flex items-center gap-2 text-accent transition-opacity hover:opacity-80"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <ArrowUpRight size={18} stroke-width={2} class="shrink-0" />
-              <span class="text-base font-semibold leading-none">{link.label}</span>
-            </a>
-          ))
-        }
+        {site.social.map(link => (
+          <Link variant="tertiary" label={link.label} href={link.href} />
+        ))}
       </div>
     </div>
 
@@ -54,19 +44,7 @@ import { ArrowDown, ArrowUpRight } from '@lucide/astro'
               Sitio web en construcción
             </span>
           ) : (
-            <a
-              href="#work"
-              class="group flex items-center gap-[18px] rounded-[10px] transition-opacity hover:opacity-90"
-            >
-              <span class="text-xl font-semibold text-foreground">{site.hero.ctaPrimary}</span>
-              <span
-                class="flex shrink-0 items-center justify-center rounded-full bg-white p-3.5"
-                style="width:54px;height:47px;"
-                aria-hidden="true"
-              >
-                <ArrowDown size={24} stroke-width={2.5} class="shrink-0 text-[#2C566A]" />
-              </span>
-            </a>
+            <Link variant="primary" label={site.hero.ctaPrimary} href="#work" />
           )
         }
       </div>

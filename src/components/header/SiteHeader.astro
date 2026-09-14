@@ -1,6 +1,7 @@
 ---
 import { site } from '@/data'
-import { Circle, Mail } from '@lucide/astro'
+import { Mail } from '@lucide/astro'
+import { Button, Link } from '@/components/ui'
 
 // Email split so neither the address nor mailto: appears in the HTML.
 // JS assembles and displays it — bots that don't execute JS never see it.
@@ -15,16 +16,7 @@ const [emailUser, emailDomain] = site.email.split('@')
     <nav class="flex flex-col gap-11.5" aria-label="Primary">
       {
         site.nav.map(item => (
-          <a
-            href={item.href}
-            class="flex items-center gap-3 text-base font-semibold text-foreground transition-opacity hover:opacity-80"
-            aria-current={item.active ? 'page' : undefined}
-          >
-            {item.active && (
-              <Circle size={10} fill="currentColor" stroke-width={0} class="shrink-0" />
-            )}
-            {item.label}
-          </a>
+          <Link variant="secondary" label={item.label} href={item.href} active={item.active} />
         ))
       }
     </nav>
@@ -32,24 +24,24 @@ const [emailUser, emailDomain] = site.email.split('@')
 
   <!-- Freelance status -->
   <div class="flex items-start gap-3 site-col-start-4 site-col-span-5" data-animate="hero-status">
-    <Circle size={10} fill="currentColor" stroke-width={0} class="shrink-0 text-accent" />
-    <span class="text-base font-semibold text-accent">Freelance</span>
-    <span class="text-base font-semibold text-accent opacity-60 cursor-default">Contractor</span>
+    <Link variant="tertiary" label="Freelance" href="#" active={true} />
+    <Link variant="tertiary" label="Contractor" href="#" active={false} />
   </div>
 
   <!-- Contact: copy-to-clipboard — no mailto: or email address in the HTML -->
-  <button
-    type="button"
+  <Button
+    variant="secondary"
+    icon={Mail}
+    iconSize={14}
     id="contact-email-btn"
     data-u={emailUser}
     data-d={emailDomain}
-    class="site-col-start-29 site-col-span-4 flex items-start justify-end gap-2 text-base font-semibold text-foreground cursor-pointer"
+    class="site-col-start-29 site-col-span-4 flex items-start justify-end"
     data-animate="hero-contact"
     aria-label="Copiar email de contacto"
   >
-    <Mail size={14} stroke-width={1.5} class="shrink-0" />
     <span id="contact-email-label"></span>
-  </button>
+  </Button>
 </header>
 
 <!-- Toast: fixed pill, positioned and animated entirely by GSAP -->
@@ -60,7 +52,9 @@ const [emailUser, emailDomain] = site.email.split('@')
   class="fixed bottom-8 z-50 pointer-events-none"
   style="left: 50%; opacity: 0;"
 >
-  <div class="bg-foreground text-background text-sm font-semibold px-4 py-2.5 rounded-full whitespace-nowrap">
+  <div
+    class="bg-foreground text-background text-sm font-semibold px-4 py-2.5 rounded-full whitespace-nowrap"
+  >
     Email copiado
   </div>
 </div>
@@ -68,9 +62,9 @@ const [emailUser, emailDomain] = site.email.split('@')
 <script>
   import { gsap } from '@/lib'
 
-  const btn    = document.getElementById('contact-email-btn') as HTMLButtonElement | null
-  const label  = document.getElementById('contact-email-label')
-  const toast  = document.getElementById('email-copied-toast')
+  const btn = document.getElementById('contact-email-btn') as HTMLButtonElement | null
+  const label = document.getElementById('contact-email-label')
+  const toast = document.getElementById('email-copied-toast')
 
   if (btn && label) {
     const email = `${btn.dataset.u ?? ''}@${btn.dataset.d ?? ''}`

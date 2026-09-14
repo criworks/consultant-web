@@ -1,0 +1,37 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+
+interface Props extends Omit<HTMLAttributes<'button'>, 'type'> {
+  variant: 'secondary'
+  icon?: any
+  iconSize?: number
+  iconStrokeWidth?: number
+}
+
+const {
+  variant,
+  icon: IconProp,
+  iconSize = 16,
+  iconStrokeWidth = 2,
+  class: className,
+  ...attrs
+} = Astro.props
+
+const Icon = IconProp
+---
+
+{
+  variant === 'secondary' && (
+    <button
+      type="button"
+      class:list={[
+        'flex items-center gap-2 text-base font-semibold text-foreground transition-opacity hover:opacity-80 cursor-pointer',
+        className,
+      ]}
+      {...attrs}
+    >
+      {Icon && <Icon size={iconSize} stroke-width={iconStrokeWidth} class="shrink-0" />}
+      <slot />
+    </button>
+  )
+}

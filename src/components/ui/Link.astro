@@ -1,0 +1,100 @@
+---
+import { ArrowDown, ArrowUpRight, Circle } from '@lucide/astro'
+import type { HTMLAttributes } from 'astro/types'
+
+interface Props extends Omit<HTMLAttributes<'a'>, 'href'> {
+  variant: 'primary' | 'secondary' | 'tertiary'
+  label: string
+  href: string
+  active?: boolean
+  icon?: any
+  iconPosition?: 'left' | 'right'
+}
+
+const {
+  variant,
+  label,
+  href,
+  active,
+  icon: IconOverride,
+  iconPosition = 'right',
+  class: className,
+  ...attrs
+} = Astro.props
+
+const PrimaryIcon = IconOverride ?? ArrowDown
+const TertiaryIcon = IconOverride ?? ArrowUpRight
+// active provided (even as false) → dot mode; active absent → arrow mode
+const tertiaryIsDotMode = active !== undefined
+---
+
+{
+  variant === 'primary' && (
+    <a
+      href={href}
+      class:list={[
+        'group flex items-center gap-[18px] rounded-[10px] transition-opacity hover:opacity-90',
+        className,
+      ]}
+      {...attrs}
+    >
+      {iconPosition === 'left' && (
+        <span
+          class="flex shrink-0 items-center justify-center rounded-full bg-foreground p-3.5"
+          style="width:54px;height:47px;"
+          aria-hidden="true"
+        >
+          <PrimaryIcon size={24} stroke-width={2.5} class="shrink-0 text-accent-dark" />
+        </span>
+      )}
+      <span class="text-xl font-semibold text-foreground">{label}</span>
+      {iconPosition === 'right' && (
+        <span
+          class="flex shrink-0 items-center justify-center rounded-full bg-foreground p-3.5"
+          style="width:54px;height:47px;"
+          aria-hidden="true"
+        >
+          <PrimaryIcon size={24} stroke-width={2.5} class="shrink-0 text-accent-dark" />
+        </span>
+      )}
+    </a>
+  )
+}
+
+{
+  variant === 'secondary' && (
+    <a
+      href={href}
+      class:list={[
+        'flex items-center gap-2 text-base font-semibold text-foreground transition-opacity hover:opacity-80',
+        className,
+      ]}
+      aria-current={active ? 'page' : undefined}
+      {...attrs}
+    >
+      {active && <Circle size={10} fill="currentColor" stroke-width={0} class="shrink-0" />}
+      {label}
+    </a>
+  )
+}
+
+{
+  variant === 'tertiary' && (
+    <a
+      href={href}
+      class:list={[
+        'flex items-center gap-2 text-base font-semibold text-accent transition-opacity hover:opacity-80',
+        className,
+      ]}
+      target={tertiaryIsDotMode ? undefined : '_blank'}
+      rel={tertiaryIsDotMode ? undefined : 'noopener noreferrer'}
+      {...attrs}
+    >
+      {tertiaryIsDotMode
+        ? active && <Circle size={10} fill="currentColor" stroke-width={0} class="shrink-0" />
+        : <TertiaryIcon size={18} stroke-width={2} class="shrink-0" />
+      }
+      {label}
+    </a>
+  )
+}
