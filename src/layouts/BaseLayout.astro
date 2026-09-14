@@ -23,6 +23,8 @@ const pageTitle = Astro.url.pathname === '/' ? title : `${title} · Cri Works`;
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{pageTitle}</title>
+		<!-- Disable browser scroll restoration before any deferred module scripts run -->
+		<script is:inline>history.scrollRestoration = 'manual'</script>
 	</head>
 	<body class="min-h-dvh bg-background text-foreground antialiased">
 	        <slot />

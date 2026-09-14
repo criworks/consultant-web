@@ -104,16 +104,25 @@ export function createScrollTimeline({
   // Fade out Hero elements sequentially (bottom to top)
   tl.to(
     '[data-animate="hero-cta"]',
-    { opacity: 0, duration: ANIMATION_TIMINGS.FAST, ease: 'none' },
+    { opacity: 0, duration: ANIMATION_TIMINGS.FAST, ease: 'none', overwrite: false },
     0
   )
   tl.to(
     '.hero-title-line, [data-animate="hero-sub"]',
-    { opacity: 0, duration: ANIMATION_TIMINGS.FAST, ease: 'none' },
+    { opacity: 0, duration: ANIMATION_TIMINGS.FAST, ease: 'none', overwrite: false },
     ANIMATION_TIMINGS.FAST * 0.67
   )
   tl.to(
-    '[data-animate="hero-tagline"], [data-animate="hero-contact"]',
+    '[data-animate="hero-tagline"], [data-animate="hero-social"], [data-animate="hero-status"]',
+    { opacity: 0, duration: ANIMATION_TIMINGS.FAST, ease: 'none', overwrite: false },
+    ANIMATION_TIMINGS.FAST * 1.33
+  )
+
+  // hero-contact fade-out: uses fromTo so its start state is always opacity:1,
+  // independent of any hero entry animation timing.
+  tl.fromTo(
+    '[data-animate="hero-contact"]',
+    { opacity: 1 },
     { opacity: 0, duration: ANIMATION_TIMINGS.FAST, ease: 'none' },
     ANIMATION_TIMINGS.FAST * 1.33
   )

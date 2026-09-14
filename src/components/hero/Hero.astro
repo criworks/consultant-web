@@ -1,43 +1,73 @@
 ---
 import { SiteGrid } from '@/components/grid'
-import { HeroHeader, HeroTitle, HeroCta } from '@/components/hero'
+import { SiteHeader } from '@/components/header'
 import { site } from '@/data'
+import { ArrowUpRight, ArrowDown } from '@lucide/astro'
 ---
 
 <section id="hero" class="sticky top-0 h-dvh text-foreground overflow-hidden">
-  <SiteGrid class="relative z-10 h-dvh grid-rows-[auto_1fr_auto] pb-4">
-    <HeroHeader />
+  <SiteGrid class="relative z-10 h-dvh grid-rows-[auto_1fr_auto] pb-8">
+    <SiteHeader />
 
-    <!-- Subtitle -->
-    <div class="site-col-start-4 site-col-span-10 flex min-h-0 flex-col justify-end pb-20">
-      <HeroTitle />
-    </div>
-
-    <!-- Title (col 4-10) -->
-    <div class="site-col-start-4 site-col-span-7 flex min-h-0 flex-col justify-end">
+    <!-- Tagline + Title + Social links -->
+    <div class="site-col-start-4 site-col-span-10 flex min-h-0 flex-col gap-4 pb-6 mt-32">
+      <p class="text-base font-semibold leading-none text-accent" data-animate="hero-tagline">
+        {site.tagline}
+      </p>
       <h1 class="text-foreground">
         <span
-          class="hero-title-line block text-[clamp(4rem,12vw,8.75rem)] leading-[0.9] tracking-[-0.02em]"
+          class="hero-title-line block text-[clamp(4rem,7.35vw,100px)] leading-[0.92] tracking-[-0.02em] font-bold"
           data-animate="hero-title"
         >
           {site.hero.title}
         </span>
       </h1>
+      <div class="flex items-center gap-11" data-animate="hero-social">
+        {
+          site.social.map(link => (
+            <a
+              href={link.href}
+              class="flex items-center gap-2 text-accent transition-opacity hover:opacity-80"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <ArrowUpRight size={18} stroke-width={2} class="shrink-0" />
+              <span class="text-base font-semibold leading-none">{link.label}</span>
+            </a>
+          ))
+        }
+      </div>
     </div>
 
-    <!-- CTA (col 11+) -->
-    <div class="site-col-start-11 site-col-span-6 flex min-h-0 flex-col justify-end">
-      <HeroCta />
+    <!-- Subtitle + CTA -->
+    <div class="site-col-start-4 site-col-span-8 flex flex-col gap-6">
+      <p class="max-w-[372px] text-2xl font-semibold leading-[1.26] text-foreground" data-animate="hero-sub">
+        {site.hero.subtitle}
+      </p>
+      <div data-animate="hero-cta">
+        {
+          site.isUnderConstruction ? (
+            <span class="text-sm font-medium tracking-wide text-white uppercase">
+              Sitio web en construcción
+            </span>
+          ) : (
+            <a
+              href="#work"
+              class="group flex items-center gap-[18px] rounded-[10px] transition-opacity hover:opacity-90"
+            >
+              <span class="text-xl font-semibold text-foreground">{site.hero.ctaPrimary}</span>
+              <span
+                class="flex shrink-0 items-center justify-center rounded-full bg-white p-3.5"
+                style="width:54px;height:47px;"
+                aria-hidden="true"
+              >
+                <ArrowDown size={24} stroke-width={2.5} class="shrink-0 text-[#2C566A]" />
+              </span>
+            </a>
+          )
+        }
+      </div>
     </div>
   </SiteGrid>
 </section>
 
-<script>
-  import { createHeroTimeline, initGsap, shouldAnimateByPreference } from '@/lib'
-
-  const gsap = initGsap()
-
-  if (shouldAnimateByPreference()) {
-    createHeroTimeline({ gsap })
-  }
-</script>

@@ -27,7 +27,7 @@ import { site } from '@/data'
       src="/images/cri-colored-new-techblue-blured.png"
       alt=""
       class="absolute max-w-none object-cover"
-      style="bottom: -10%; left: 45%; height: 960px; opacity: 1"
+      style="bottom: -10%; left: 45%; height: 125dvh; opacity: 1"
       data-animate="floating-image"
     />
   </div>
@@ -50,19 +50,27 @@ import { site } from '@/data'
 <script>
   import {
     createHeroInitialAnimation,
+    createHeroTimeline,
     createScrollTimeline,
     initGsap,
     shouldAnimateByPreference,
   } from '@/lib'
+
   const gsap = initGsap()
 
   if (shouldAnimateByPreference()) {
-    // Initialize floating image position matching Figma "Hero" state
     createHeroInitialAnimation({ gsap })
 
     const introElement = document.querySelector('#intro')
-    if (introElement) {
-      createScrollTimeline({ gsap, trigger: introElement })
-    }
+
+    // hero entry timeline (nav, status, tagline, social, title, sub, cta).
+    // scroll timeline is created in onComplete so ScrollTrigger captures
+    // opacity:1 as the start state for all fade-out tweens.
+    const heroTl = createHeroTimeline({ gsap })
+    heroTl.eventCallback('onComplete', () => {
+      if (introElement) {
+        createScrollTimeline({ gsap, trigger: introElement })
+      }
+    })
   }
 </script>

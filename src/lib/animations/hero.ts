@@ -24,16 +24,18 @@ export function createHeroTimeline({ gsap }: HeroAnimationConfig): ReturnType<ty
         y: 24,
         opacity: 0,
         duration: ANIMATION_TIMINGS.NORMAL,
+        immediateRender: true,
       },
       `-=${ANIMATION_TIMINGS.NORMAL * 0.5}`
     )
     .from(
-      '[data-animate="hero-nav"], [data-animate="hero-tagline"], [data-animate="hero-contact"]',
+      '[data-animate="hero-nav"], [data-animate="hero-status"], [data-animate="hero-tagline"], [data-animate="hero-contact"], [data-animate="hero-social"]',
       {
         opacity: 0,
         y: 12,
         duration: ANIMATION_TIMINGS.FAST,
         stagger: ANIMATION_DELAYS.STAGGER,
+        immediateRender: true,
       },
       `-=${ANIMATION_TIMINGS.NORMAL * 0.6}`
     )
@@ -43,6 +45,7 @@ export function createHeroTimeline({ gsap }: HeroAnimationConfig): ReturnType<ty
         y: 20,
         opacity: 0,
         duration: ANIMATION_TIMINGS.NORMAL,
+        immediateRender: true,
       },
       `-=${ANIMATION_TIMINGS.NORMAL * 0.3}`
     );
