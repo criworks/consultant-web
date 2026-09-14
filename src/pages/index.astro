@@ -1,10 +1,12 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro'
-import { Hero, Intro } from '@/components'
+import { Hero, Intro, SplashLoader } from '@/components'
 import { site } from '@/data'
 ---
 
 <BaseLayout title="Cri Works — Product Designer" description={site.hero.subtitle}>
+  <SplashLoader />
+
   <!-- Accent Gradient Block - Moves upward on scroll -->
   <div
     class="fixed inset-x-0 z-0 pointer-events-none"
@@ -58,19 +60,101 @@ import { site } from '@/data'
 
   const gsap = initGsap()
 
-  if (shouldAnimateByPreference()) {
-    createHeroInitialAnimation({ gsap })
+  // ─── Splash Loader ──────────────────────────────────────────────────────────
+  function runSplash(onComplete: () => void): void {
+    const CIRCUMFERENCE = 50.2655
+    const MIN_DELAY_MS = 300
 
-    const introElement = document.querySelector('#intro')
+    const splash = document.getElementById('splash-loader') as HTMLElement | null
+    if (!splash) { onComplete(); return }
 
-    // hero entry timeline (nav, status, tagline, social, title, sub, cta).
-    // scroll timeline is created in onComplete so ScrollTrigger captures
-    // opacity:1 as the start state for all fade-out tweens.
-    const heroTl = createHeroTimeline({ gsap })
-    heroTl.eventCallback('onComplete', () => {
-      if (introElement) {
-        createScrollTimeline({ gsap, trigger: introElement })
+    const arc = document.getElementById('splash-arc') as SVGCircleElement | null
+    const pctEl = document.getElementById('splash-pct') as HTMLElement | null
+    const pill = document.getElementById('splash-pill') as HTMLElement | null
+    const imgWrap = document.getElementById('splash-img-wrap') as HTMLElement | null
+
+    if (!arc || !pctEl || !pill || !imgWrap) { splash.remove(); onComplete(); return }
+
+    let progress = 0
+    let loaded = false
+    let loadedAt = 0
+    const startedAt = performance.now()
+
+    function setProgress(value: number): void {
+      progress = Math.max(0, Math.min(100, value))
+      arc.style.strokeDashoffset = String(CIRCUMFERENCE * (1 - progress / 100))
+      pctEl.textContent = String(Math.round(progress))
+    }
+
+    function exitSplash(): void {
+      const tl = gsap.timeline({
+        onComplete: () => { splash.remove(); onComplete() },
+      })
+      tl.to(pill, { y: -64, opacity: 0, duration: 0.45, ease: 'power3.in' })
+      tl.to(imgWrap, { y: 80, opacity: 0, duration: 0.45, ease: 'power3.in' }, '<0.05')
+    }
+
+    function tick(now: number): void {
+      const elapsed = now - startedAt
+      let target: number
+
+      if (!loaded) {
+        // Fake: 0→70% in 700 ms, then crawl toward 90%
+        target = elapsed < 700
+          ? (elapsed / 700) * 70
+          : 70 + Math.min(20, ((elapsed - 700) / 4000) * 20)
+      } else {
+        // Loaded: ramp 90→100 over 350 ms then exit
+        const afterLoad = now - loadedAt
+        target = 90 + Math.min(10, (afterLoad / 350) * 10)
       }
-    })
+
+      setProgress(target)
+
+      if (progress < 100) {
+        requestAnimationFrame(tick)
+      } else {
+        exitSplash()
+      }
+    }
+
+    requestAnimationFrame(tick)
+
+    function markLoaded(): void {
+      if (loaded) return
+      loaded = true
+      loadedAt = performance.now()
+    }
+
+    if (document.readyState === 'complete') {
+      const elapsed = performance.now() - startedAt
+      setTimeout(markLoaded, Math.max(0, MIN_DELAY_MS - elapsed))
+    } else {
+      window.addEventListener('load', () => {
+        const elapsed = performance.now() - startedAt
+        setTimeout(markLoaded, Math.max(0, MIN_DELAY_MS - elapsed))
+      }, { once: true })
+    }
   }
+
+  // ─── Hero Animations (run after splash exits) ───────────────────────────────
+  function runHeroAnimations(): void {
+    if (shouldAnimateByPreference()) {
+      createHeroInitialAnimation({ gsap })
+
+      const introElement = document.querySelector('#intro')
+
+      // hero entry timeline (nav, status, tagline, social, title, sub, cta).
+      // scroll timeline is created in onComplete so ScrollTrigger captures
+      // opacity:1 as the start state for all fade-out tweens.
+      const heroTl = createHeroTimeline({ gsap })
+      heroTl.eventCallback('onComplete', () => {
+        if (introElement) {
+          createScrollTimeline({ gsap, trigger: introElement })
+        }
+      })
+    }
+  }
+
+  runSplash(runHeroAnimations)
 </script>

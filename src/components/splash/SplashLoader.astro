@@ -1,0 +1,61 @@
+---
+
+---
+
+<div
+  id="splash-loader"
+  aria-hidden="true"
+  style="position:fixed;inset:0;z-index:9999;background:#000000;display:flex;align-items:flex-start;justify-content:center;overflow:hidden;"
+>
+  <!-- Pill — adjust margin-top to move vertically -->
+  <div
+    id="splash-pill"
+    style="position:relative;z-index:1;display:flex;align-items:center;gap:6px;border-radius:999px;background:rgba(255,255,255,0.10);padding:8px 12px 8px 8px;margin-top:260px;"
+  >
+    <!-- Progress circle -->
+    <div style="width:20px;height:20px;flex-shrink:0;">
+      <svg
+        viewBox="0 0 20 20"
+        width="20"
+        height="20"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <!-- Static track ring -->
+        <circle cx="10" cy="10" r="8" stroke="#56B5D3" stroke-width="2" stroke-opacity="0.25"
+        ></circle>
+        <!-- Progress arc: clockwise from top, animated via strokeDashoffset -->
+        <circle
+          id="splash-arc"
+          cx="10"
+          cy="10"
+          r="8"
+          stroke="#56B5D3"
+          stroke-width="2"
+          stroke-linecap="round"
+          transform="rotate(-90 10 10)"
+          stroke-dasharray="50.2655"
+          stroke-dashoffset="50.2655"></circle>
+      </svg>
+    </div>
+
+    <!-- Label -->
+    <span
+      style="color:#56B5D3;font-family:var(--font-sans);font-size:16px;font-weight:500;line-height:1;white-space:nowrap;"
+    >
+      Cargando... <span id="splash-pct">0</span>%
+    </span>
+  </div>
+
+  <!-- Floating image — wrapper uses no CSS transform so GSAP y is clean -->
+  <div
+    id="splash-img-wrap"
+    style="position:absolute;bottom:-10%;left:0;right:0;display:flex;justify-content:center;pointer-events:none;"
+  >
+    <img
+      src="/images/cri-colored-new-techblue-back-blured.png"
+      alt=""
+      style="height:80dvh;width:auto;max-width:none;object-fit:cover;display:block;"
+    />
+  </div>
+</div>
