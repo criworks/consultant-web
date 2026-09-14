@@ -1,0 +1,21 @@
+@theme {
+  /* Custom text sizes */
+  --text-hero-title: clamp(4rem, 7.35vw, 100px);
+  --text-intro: 2rem;
+
+  /* Custom leading */
+  --leading-hero: 0.92;
+  --leading-sub: 1.26;
+  --leading-intro: 1.4;
+
+  /* Custom tracking */
+  --tracking-hero: -0.02em;
+
+  /* Custom radius */
+  --radius-link-primary: 10px;
+
+}
+
+@utility z-splash {
+  z-index: 9999;
+}

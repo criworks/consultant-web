@@ -33,15 +33,14 @@ const tertiaryIsDotMode = active !== undefined
     <a
       href={href}
       class:list={[
-        'group flex items-center gap-[18px] rounded-[10px] transition-opacity hover:opacity-90',
+        'group flex items-center gap-4.5 rounded-link-primary transition-opacity hover:opacity-90',
         className,
       ]}
       {...attrs}
     >
       {iconPosition === 'left' && (
         <span
-          class="flex shrink-0 items-center justify-center rounded-full bg-foreground p-3.5"
-          style="width:54px;height:47px;"
+          class="flex w-13.5 h-11.75 shrink-0 items-center justify-center rounded-full bg-foreground p-3.5"
           aria-hidden="true"
         >
           <PrimaryIcon size={24} stroke-width={2.5} class="shrink-0 text-accent-dark" />
@@ -50,8 +49,7 @@ const tertiaryIsDotMode = active !== undefined
       <span class="text-xl font-semibold text-foreground">{label}</span>
       {iconPosition === 'right' && (
         <span
-          class="flex shrink-0 items-center justify-center rounded-full bg-foreground p-3.5"
-          style="width:54px;height:47px;"
+          class="flex w-13.5 h-11.75 shrink-0 items-center justify-center rounded-full bg-foreground p-3.5"
           aria-hidden="true"
         >
           <PrimaryIcon size={24} stroke-width={2.5} class="shrink-0 text-accent-dark" />
