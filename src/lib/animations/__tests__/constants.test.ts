@@ -45,12 +45,12 @@ describe('Animation Constants', () => {
   });
 
   describe('GRID_CONFIG', () => {
-    it('should have 16 columns', () => {
-      expect(GRID_CONFIG.COLUMNS).toBe(16);
+    it('should have 32 columns', () => {
+      expect(GRID_CONFIG.COLUMNS).toBe(32);
     });
 
-    it('should have matching margin and gutter', () => {
-      expect(GRID_CONFIG.MARGIN).toBe('16px');
+    it('should have correct margin and gutter', () => {
+      expect(GRID_CONFIG.MARGIN).toBe('40px');
       expect(GRID_CONFIG.GUTTER).toBe('16px');
     });
   });

@@ -18,10 +18,10 @@ Cada archivo debe tener UN propósito claro.
 ```
 ❌ BAD: global.css (289 líneas, mezcla: fonts, grid, animaciones, colores)
 ✅ GOOD: 
-  - base/typography.css (15 líneas, solo @font-face)
-  - theme/colors.css (11 líneas, solo @theme)
-  - components/grid.css (65 líneas, .site-grid + utilities)
-  - animations/backdrop.css (24 líneas, solo animaciones)
+  - base/typography.css (fonts @font-face)
+  - theme/colors.css (@theme variables)
+  - components/grid.css (.site-grid + utilities)
+  - animations/backdrop.css (animation styles)
 ```
 
 ### 2. **DRY - Don't Repeat Yourself**
@@ -29,9 +29,8 @@ Magic numbers y configuración centralizada.
 
 ```typescript
 ❌ BAD:
-const tl = gsap.timeline({...})
 tl.to('[data-animate="block"]', { y: -1168, duration: 1 }, 0)
-// ... otro archivo ...
+// otro archivo...
 tl.to('[data-animate="other"]', { y: -1168, duration: 1 }, 0)
 
 ✅ GOOD:
@@ -81,7 +80,7 @@ TypeScript strict mode, tipos compartidos.
 ❌ BAD:
 const nav = [
   { label: 'Intro', href: '#intro', active: true },
-  // ... tipo implícito
+  // tipo implícito
 ]
 
 ✅ GOOD:
@@ -123,125 +122,71 @@ src/
 
 ## 🚀 Plan de 10 Fases
 
-### FASE 1: Separación de Estilos CSS por Dominio
+### ✅ FASE 1: Separación de Estilos CSS por Dominio
 
 **¿Por qué?** Un archivo CSS monolítico es difícil de mantener, imposible de reutilizar.
 
-**¿Qué?**
-- Separar por dominio: base, theme, components, animations
-- Cada archivo ~10-70 líneas
-- global.css solo imports
-
-**Cómo implementar:**
+**Implementado en:**
 
 ```
 src/styles/
-├── global.css (11 líneas)
+├── global.css          ← solo @import statements
 ├── base/
-│   ├── typography.css (fonts)
-│   └── reset.css (html, body)
+│   ├── typography.css  ← fonts (@font-face)
+│   └── reset.css       ← html, body
 ├── theme/
-│   ├── colors.css (@theme variables)
-│   ├── layout.css (grid config)
-│   └── index.css (re-exports)
+│   ├── colors.css      ← @theme variables (foreground, background, accent)
+│   ├── layout.css      ← CSS custom properties del grid
+│   └── index.css       ← re-exports del theme
 ├── components/
-│   └── grid.css (component styles + utilities)
+│   └── grid.css        ← .site-grid + utilidades site-col-* (32 columnas)
 └── animations/
-    ├── backdrop.css (animation styles)
-    └── index.css (re-export)
+    ├── backdrop.css    ← animation styles
+    └── index.css       ← re-export
 ```
 
-**Beneficio:** +96% reducción en global.css, fácil reutilización, mejor discoveribilidad.
-
-**Ejemplo:**
-
 ```css
-/* ANTES: global.css 289 líneas */
-@font-face { ... }
-:root { --grid-columns: 16; }
-.site-grid { display: grid; }
-.site-col-start-1 { ... }
-/* ... repetidas 32 veces ... */
-[data-animate='...'] { ... }
-@theme { ... }
-
-/* DESPUÉS: Modular */
-/* base/typography.css */
-@font-face { ... }
-
-/* theme/layout.css */
-:root { --grid-columns: 16; }
-
-/* components/grid.css */
-.site-grid { display: grid; }
-.site-col-start-1 { ... }
-
-/* animations/backdrop.css */
-[data-animate='...'] { ... }
-
-/* global.css: 11 líneas */
+/* global.css — 6 líneas */
+@import 'tailwindcss';
 @import './base/typography.css';
+@import './base/reset.css';
 @import './theme/index.css';
 @import './components/grid.css';
+@import './animations/index.css';
 ```
 
 ---
 
-### FASE 2: Índices de Re-exportación (Barrel Exports)
+### ✅ FASE 2: Índices de Re-exportación (Barrel Exports)
 
-**¿Por qué?** Imports profundos = refactorización difícil, tipos ofuscados.
-
-**¿Qué?** Crear `index.ts` en cada directorio que re-exporte.
-
-**Cómo implementar:**
+**Implementado en:**
 
 ```typescript
 // src/lib/index.ts
 export { initGsap, gsap, ScrollTrigger } from '@/lib/gsap';
 export { initLenis } from '@/lib/lenis';
-export { shouldAnimateByPreference } from '@/lib/motion';
+export { shouldAnimateByPreference, prefersReducedMotion } from '@/lib/motion';
 export * from '@/lib/animations';
-
-// src/components/hero/index.ts
-export { default as Hero } from '@/components/hero/Hero.astro';
-export { default as HeroTitle } from '@/components/hero/HeroTitle.astro';
-export { default as HeroCta } from '@/components/hero/HeroCta.astro';
+export { ANIMATION_TIMINGS, ANIMATION_EASING, ANIMATION_DELAYS, GRID_CONFIG, SCROLL_TRANSFORMS, FLOATING_IMAGE_INITIAL } from '@/lib/constants';
 
 // src/components/index.ts
 export * from '@/components/hero';
+export * from '@/components/header';
 export * from '@/components/grid';
 export * from '@/components/intro';
-```
 
-**Beneficio:** Imports limpios, refactorización segura, IDE autocomplete mejorado.
-
-**Antes vs Después:**
-
-```typescript
-// ANTES
-import Hero from '../../../components/hero/Hero.astro'
-import HeroTitle from '../../../components/hero/HeroTitle.astro'
-import HeroCta from '../../../components/hero/HeroCta.astro'
-
-// DESPUÉS
-import { Hero, HeroTitle, HeroCta } from '@/components'
+// src/data/index.ts
+export { site } from '@/data/site';
+export type { SiteConfig, NavItem, SocialLink, HeroContent } from '@/data/types';
 ```
 
 ---
 
-### FASE 3: Lógica Centralizada (Constantes + Funciones Reutilizables)
+### ✅ FASE 3: Lógica Centralizada (Constantes + Funciones Reutilizables)
 
-**¿Por qué?** Magic numbers no documentados, duplicación de lógica.
-
-**¿Qué?**
-- `constants.ts`: Todos los valores hardcodeados
-- `animations/`: Funciones GSAP reutilizables
-- `motion.ts`: Utilidades de accesibilidad
-
-**Cómo implementar:**
+**Implementado en `src/lib/constants.ts`:**
 
 ```typescript
-// src/lib/constants.ts
 export const ANIMATION_TIMINGS = {
   FAST: 0.3,
   NORMAL: 0.6,
@@ -250,41 +195,45 @@ export const ANIMATION_TIMINGS = {
 } as const;
 
 export const ANIMATION_EASING = {
+  POWER_IN: 'power2.in',
   POWER_OUT: 'power2.out',
+  POWER_INOUT: 'power2.inOut',
   LINEAR: 'linear',
+  EASE_OUT_STRONG: 'power3.out',
+  EASE_INOUT_SUBTLE: 'power1.inOut',
+} as const;
+
+export const ANIMATION_DELAYS = {
+  STAGGER: 0.08,
+  STAGGER_TITLE: 0.12,
+} as const;
+
+export const GRID_CONFIG = {
+  COLUMNS: 32,
+  MARGIN: '40px',
+  GUTTER: '16px',
 } as const;
 
 export const SCROLL_TRANSFORMS = {
   ACCENT_BLOCK_Y: -1168,
-  FLOATING_IMAGE_X: -10.23,
+  FLOATING_IMAGE_HEIGHT: 860,
+  FLOATING_IMAGE_X: 60,
   FLOATING_IMAGE_OPACITY: 0.6,
+  NAV_XPERCENT: -100,
+  NAV_X: -16,
 } as const;
 
-export const GRID_CONFIG = {
-  COLUMNS: 16,
-  MARGIN: '16px',
-  GUTTER: '16px',
+export const FLOATING_IMAGE_INITIAL = {
+  X_PERCENT: -50,
+  X: 300,
 } as const;
 ```
 
+**Funciones reutilizables en `src/lib/animations/`:**
+
 ```typescript
-// src/lib/animations/scroll.ts
-export function createScrollTimeline({
-  gsap,
-  trigger,
-}: ScrollAnimationConfig): ReturnType<typeof gsap.timeline> {
-  const tl = gsap.timeline({
-    scrollTrigger: { trigger, start: 'top bottom', end: 'top top', scrub: 1 },
-  });
-
-  tl.to('[data-animate="accent-block"]', {
-    y: SCROLL_TRANSFORMS.ACCENT_BLOCK_Y,
-    duration: ANIMATION_TIMINGS.SLOWEST,
-    ease: ANIMATION_EASING.POWER_OUT,
-  }, 0);
-
-  return tl;
-}
+// hero.ts  — createHeroTimeline(), createHeroInitialAnimation()
+// scroll.ts — createScrollTimeline()
 ```
 
 ```typescript
@@ -295,20 +244,13 @@ export function shouldAnimateByPreference(): boolean {
 }
 ```
 
-**Beneficio:** -400 LOC de scripts inline, constantes globales, reutilización, DRY.
-
 ---
 
-### FASE 4: TypeScript Path Aliases
+### ✅ FASE 4: TypeScript Path Aliases
 
-**¿Por qué?** Imports relativos requieren contar niveles (`../../../`), frágiles.
-
-**¿Qué?** Configurar aliases en `tsconfig.json`.
-
-**Cómo implementar:**
+**Implementado en `tsconfig.json`:**
 
 ```json
-// tsconfig.json
 {
   "compilerOptions": {
     "baseUrl": ".",
@@ -319,6 +261,7 @@ export function shouldAnimateByPreference(): boolean {
       "@/lib": ["src/lib"],
       "@/lib/*": ["src/lib/*"],
       "@/styles": ["src/styles"],
+      "@/styles/*": ["src/styles/*"],
       "@/data": ["src/data"],
       "@/layouts": ["src/layouts"],
       "@/types": ["src/types"]
@@ -327,28 +270,13 @@ export function shouldAnimateByPreference(): boolean {
 }
 ```
 
-**Beneficio:** Imports absolutos, legibles, refactorización segura, IDE soporte.
-
-```typescript
-// ANTES: Contar niveles
-import { Hero } from '../../../components/hero'
-
-// DESPUÉS: Alias directo
-import { Hero } from '@/components'
-```
-
 ---
 
-### FASE 5: Datos Separados con Tipado
+### ✅ FASE 5: Datos con Tipado
 
-**¿Por qué?** Datos monolíticos no reutilizables, sin tipado.
+**Patrón implementado: objeto agregado tipado con `satisfies`**
 
-**¿Qué?**
-- Separar por dominio: config, navigation, social, content
-- Crear `types.ts` para validación
-- Mantener `site.ts` como agregado (backward compatible)
-
-**Cómo implementar:**
+En lugar de separar en archivos por dominio (navigation.ts, social.ts, content.ts), se usa un único `site.ts` con tipado granular inline. Esto funciona bien para proyectos de una sola página donde los datos no se reutilizan de forma aislada.
 
 ```typescript
 // src/data/types.ts
@@ -369,309 +297,156 @@ export interface HeroContent {
   readonly ctaPrimary: string;
   readonly ctaSecondary: string;
 }
-```
 
-```typescript
-// src/data/navigation.ts
-import type { NavItem } from '@/data/types';
-
-export const navigation = [
-  { label: 'Intro', href: '#intro', active: true },
-  { label: 'Portfolio', href: '#work', active: false },
-  { label: 'Perfil', href: '#bio', active: false },
-] as const satisfies readonly NavItem[];
-```
-
-```typescript
-// src/data/social.ts
-import type { SocialLink } from '@/data/types';
-
-export const social = [
-  { label: 'Instagram', href: 'https://instagram.com/...' },
-  { label: 'Github', href: 'https://github.com/...' },
-] as const satisfies readonly SocialLink[];
-```
-
-```typescript
-// src/data/index.ts
-export { site } from '@/data/site'; // backward compatible
-export { navigation } from '@/data/navigation';
-export { social } from '@/data/social';
-export { heroContent } from '@/data/content';
-export type { NavItem, SocialLink, HeroContent } from '@/data/types';
-```
-
-**Beneficio:** Reutilización granular, tipado fuerte, cambios aislados.
-
-```typescript
-// ANTES: Todo junto, sin tipos
-import { site } from '@/data'
-const nav = site.nav  // ❓ tipo implícito
-
-// DESPUÉS: Granular y tipado
-import { navigation } from '@/data'
-import type { NavItem } from '@/data'
-const nav: NavItem[] = navigation // ✅ tipo explícito
-```
-
----
-
-### FASE 6: Layouts Jerárquicos
-
-**¿Por qué?** Estructura HTML repetida, difícil mantener globalmente.
-
-**¿Qué?**
-- `BaseLayout`: HTML base
-- `PageLayout`: Grid wrapper
-- `SectionLayout`: Semantic section
-- `HeroLayout`: Hero-specific
-
-**Cómo implementar:**
-
-```astro
-// src/layouts/BaseLayout.astro
----
-import '@/styles/global.css';
-
-interface Props {
-  title?: string;
-  description?: string;
-}
----
-
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-  </head>
-  <body>
-    <slot />
-    <script>
-      import { initLenis } from '@/lib';
-      initLenis();
-    </script>
-  </body>
-</html>
-```
-
-```astro
-// src/layouts/PageLayout.astro
----
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import { SiteGrid } from '@/components/grid';
-
-interface Props {
-  title?: string;
-  description?: string;
-}
----
-
-<BaseLayout title={title} description={description}>
-  <SiteGrid>
-    <div class="site-col-start-1 site-col-span-16">
-      <slot />
-    </div>
-  </SiteGrid>
-</BaseLayout>
-```
-
-```astro
-// src/layouts/HeroLayout.astro
----
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import { SiteGrid } from '@/components/grid';
-
-interface Props {
-  title?: string;
-  description?: string;
-}
----
-
-<BaseLayout title={title} description={description}>
-  <section id="hero" class="sticky top-0 h-dvh overflow-hidden">
-    <SiteGrid class="h-dvh">
-      <slot />
-    </SiteGrid>
-  </section>
-</BaseLayout>
-```
-
-**Beneficio:** Jerarquía clara, código reutilizable, cambios globales centralizados.
-
----
-
-### FASE 7: Grid/Utilities Generator (Automatización)
-
-**¿Por qué?** Utilities generadas manualmente = mantenimiento tedioso, propenso a errores.
-
-**¿Qué?** Script que genera CSS desde constantes.
-
-**Cómo implementar:**
-
-```typescript
-// scripts/generate-grid-css.ts
-import { writeFileSync, readFileSync } from 'fs';
-
-const GRID_COLUMNS = 16;
-const BREAKPOINT = '64rem';
-
-function generateGridUtilities(): string {
-  let css = '/* Column start utilities */\n';
-  
-  for (let i = 1; i <= GRID_COLUMNS; i++) {
-    css += `  .site-col-start-${i} { grid-column-start: ${i}; }\n`;
-  }
-
-  css += '\n/* Column span utilities */\n';
-  for (let i = 1; i <= GRID_COLUMNS; i++) {
-    css += `  .site-col-span-${i} { grid-column-end: span ${i}; }\n`;
-  }
-
-  return css;
-}
-
-const gridPath = './src/styles/components/grid.css';
-const existing = readFileSync(gridPath, 'utf-8');
-const newContent = `${header}@layer utilities {\n${generateGridUtilities()}}\n`;
-writeFileSync(gridPath, newContent);
-```
-
-```json
-// package.json
-{
-  "scripts": {
-    "generate:grid": "tsx scripts/generate-grid-css.ts"
-  }
+export interface SiteConfig {
+  readonly name: string;
+  readonly email: string;
+  readonly tagline: string;
+  readonly isUnderConstruction: boolean;
 }
 ```
 
-**Beneficio:** Single source of truth, cambio global en 1 línea, sin mantenimiento manual.
+```typescript
+// src/data/site.ts — agregado tipado
+import type { NavItem, SocialLink, HeroContent } from '@/data/types'
 
-```bash
-# Cambiar de 16 a 12 columnas
-# Editar: GRID_COLUMNS = 12
-npm run generate:grid
-# ✅ 12 utilities generadas automáticamente
+export const site = {
+  name: 'Cri Works',
+  email: 'cri@cri.works',
+  tagline: 'Product Designer based in Santiago, Chile.',
+  isUnderConstruction: false,
+
+  nav: [
+    { label: 'Cri Works', href: '#', active: true },
+    { label: 'Work', href: '#work', active: false },
+    { label: 'Bio', href: '#bio', active: false },
+  ] satisfies NavItem[],
+
+  social: [
+    { label: 'Instagram', href: 'https://instagram.com/cri.works' },
+  ] satisfies SocialLink[],
+
+  hero: {
+    title: 'Cri Works',
+    subtitle: 'Diseño productos...',
+    ctaPrimary: 'Conoce mi trabajo',
+    ctaSecondary: 'Ver trabajo reciente',
+  } satisfies HeroContent,
+} as const
+```
+
+> **Alternativa para proyectos multi-página o con datos más reutilizables:** separar en `navigation.ts`, `social.ts`, `content.ts` y hacer el agregado en `site.ts`.
+
+---
+
+### ✅ FASE 6: Layouts Jerárquicos
+
+**Implementado en `src/layouts/`:**
+
+```
+src/layouts/
+├── BaseLayout.astro    ← HTML base, meta, CSS global, Lenis init
+├── PageLayout.astro    ← BaseLayout + SiteGrid wrapper
+├── SectionLayout.astro ← section semántica
+└── HeroLayout.astro    ← BaseLayout + section sticky hero
 ```
 
 ---
 
-### FASE 8: Testing Infrastructure
+### ✅ FASE 7: Grid CSS (32 columnas)
 
-**¿Por qué?** Sin tests = regressions ocultas, refactoring arriesgado.
+**Grid utilities generadas en `src/styles/components/grid.css`:**
 
-**¿Qué?** Vitest + tests para constantes y utilidades.
+- 32 utilidades `.site-col-start-N` (grid-column-start: N)
+- 32 utilidades `.site-col-span-N` (grid-column-end: span N)
+- Prefijo `site-` para evitar colisiones con las utilities nativas de Tailwind (`col-span`, `col-start`)
 
-**Cómo implementar:**
-
-```typescript
-// vitest.config.ts
-import { defineConfig } from 'vitest/config';
-
-export default defineConfig({
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-    },
-  },
-});
+```css
+/* GRID_CONFIG: 32 columnas, 40px margin, 16px gutter */
+@layer utilities {
+  .site-col-start-1 { grid-column-start: 1; }
+  /* ... hasta site-col-start-32 */
+  .site-col-span-1 { grid-column-end: span 1; }
+  /* ... hasta site-col-span-32 */
+}
 ```
 
+**Para cambiar columnas:** editar `GRID_CONFIG.COLUMNS` en `constants.ts` y regenerar el CSS.
+
+---
+
+### ✅ FASE 8: Testing Infrastructure
+
+**Implementado con Vitest en `src/lib/animations/__tests__/`:**
+
 ```typescript
-// src/lib/animations/__tests__/constants.test.ts
-import { describe, it, expect } from 'vitest';
-import { ANIMATION_TIMINGS, ANIMATION_EASING } from '@/lib/constants';
+// constants.test.ts — verifica valores correctos de ANIMATION_TIMINGS,
+// ANIMATION_EASING, ANIMATION_DELAYS, GRID_CONFIG, SCROLL_TRANSFORMS
 
-describe('Animation Constants', () => {
-  describe('ANIMATION_TIMINGS', () => {
-    it('should have increasing duration values', () => {
-      expect(ANIMATION_TIMINGS.FAST).toBeLessThan(ANIMATION_TIMINGS.NORMAL);
-      expect(ANIMATION_TIMINGS.NORMAL).toBeLessThan(ANIMATION_TIMINGS.SLOW);
-    });
-  });
-
-  describe('ANIMATION_EASING', () => {
-    it('should be valid GSAP easing', () => {
-      expect(ANIMATION_EASING.LINEAR).toBe('linear');
-      expect(ANIMATION_EASING.POWER_OUT).toMatch(/power/);
-    });
-  });
-});
+// motion.test.ts — verifica shouldAnimateByPreference()
 ```
 
 ```bash
-# npm scripts
 npm run test          # Watch mode
 npm run test:ui       # Interactive UI
 npm run test:coverage # Coverage report
 ```
 
-**Beneficio:** Documentación ejecutable, confianza en refactorings, regressions detectados.
-
 ---
 
-### FASE 9: TypeScript Strict Mode
+### ✅ FASE 9: TypeScript Strict Mode
 
-**¿Por qué?** Sin strict mode = bugs ocultos en tiempo de runtime.
-
-**¿Qué?** Activar todas las flags strict en tsconfig.
-
-**Cómo implementar:**
+**Implementado (incluso más estricto que baseline):**
 
 ```json
-// tsconfig.json
 {
+  "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
     "strict": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
     "noImplicitAny": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true
   }
 }
 ```
 
+**Tipos globales compartidos en `src/types/index.ts`:**
+
 ```typescript
-// src/types/index.ts
 export type { SiteConfig, NavItem, SocialLink, HeroContent } from '@/data/types';
 export type { ScrollAnimationConfig, HeroAnimationConfig } from '@/lib/animations';
 
-// Utility types
-export type Readonly<T> = {
-  readonly [K in keyof T]: T[K];
+export type Readonly<T> = { readonly [K in keyof T]: T[K] };
+export type DeepReadonly<T> = {
+  readonly [K in keyof T]: T[K] extends object ? DeepReadonly<T[K]> : T[K];
 };
-```
-
-**Beneficio:** Errores compilados (no runtime), mejor IDE support, código autodocumentado.
-
-```typescript
-// ❌ BAD: Sin strict mode
-const items = nav.map(item => item.label) // posible undefined
-
-// ✅ GOOD: Con strict mode
-const items: string[] = nav.map((item: NavItem) => item.label)
 ```
 
 ---
 
-### FASE 10: CSS Modules (Encapsulación de Estilos)
+### ✅ FASE 10: CSS Modules (Encapsulación de Estilos)
 
-**¿Por qué?** Estilos globales = colisiones, lado effects, refactoring riesgoso.
+**Implementado en componentes que lo requieren:**
 
-**¿Qué?** CSS Modules para scoping automático de clases.
-
-**Cómo implementar:**
+```
+src/components/
+├── grid/
+│   └── SiteGrid.module.css  ← .grid (display: grid con CSS custom props)
+└── hero/
+    └── Hero.module.css      ← .section, .grid, .content, .contentInner, .contentItems
+```
 
 ```css
-/* src/components/grid/SiteGrid.module.css */
+/* SiteGrid.module.css */
 .grid {
   display: grid;
   width: 100%;
@@ -681,96 +456,86 @@ const items: string[] = nav.map((item: NavItem) => item.label)
 }
 ```
 
-```astro
-// src/components/grid/SiteGrid.astro
----
-import styles from './SiteGrid.module.css';
-
-interface Props {
-  tag?: keyof HTMLElementTagNameMap;
-  class?: string;
-}
-
-const { tag: Tag = 'div', class: className = '' } = Astro.props;
----
-
-<Tag class:list={[styles.grid, className]}>
-  <slot />
-</Tag>
-```
-
-```css
-/* src/components/hero/Hero.module.css */
-.section {
-  position: sticky;
-  top: 0;
-  height: 100dvh;
-  overflow: hidden;
-}
-
-.content {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-```
-
-**Beneficio:** Estilos scoped, colocation, dead code detection, refactoring seguro.
-
-```css
-/* ANTES: Globales */
-.title { color: red; }  /* puede chocar con otro .title */
-
-/* DESPUÉS: Scoped */
-/* Hero.module.css */
-.title { color: red; }
-/* → generado como: Hero_title__a1b2c */
-```
-
 ---
 
 ## 📊 Matriz de Impacto
 
-| Fase | Esfuerzo | Impacto | Casos de Uso |
-|------|----------|---------|--------------|
-| 1. Estilos | 🟢 30min | 🔴 Alto | Todos |
-| 2. Índices | 🟢 20min | 🔴 Alto | Todos |
-| 3. Lógica | 🟡 1h | 🔴 Alto | Todos |
-| 4. Path Alias | 🟢 15min | 🟠 Medio | Todos |
-| 5. Datos | 🟢 30min | 🟠 Medio | Data-heavy |
-| 6. Layouts | 🟡 1h | 🟠 Medio | Multi-page |
-| 7. Generator | 🟡 1h | 🟢 Bajo | Grid-based |
-| 8. Testing | 🔴 2h | 🔴 Alto | Teams |
-| 9. Strict TS | 🔴 3h | 🔴 Alto | Teams |
-| 10. CSS Modules | 🔴 2h | 🟠 Medio | Large projects |
+| Fase | Estado | Esfuerzo | Impacto |
+|------|--------|----------|---------|
+| 1. Estilos separados | ✅ Hecho | 🟢 30min | 🔴 Alto |
+| 2. Barrel exports | ✅ Hecho | 🟢 20min | 🔴 Alto |
+| 3. Constantes + lib | ✅ Hecho | 🟡 1h | 🔴 Alto |
+| 4. Path aliases | ✅ Hecho | 🟢 15min | 🟠 Medio |
+| 5. Datos tipados | ✅ Hecho | 🟢 30min | 🟠 Medio |
+| 6. Layouts jerárquicos | ✅ Hecho | 🟡 1h | 🟠 Medio |
+| 7. Grid utilities 32 cols | ✅ Hecho | 🟡 1h | 🟢 Bajo |
+| 8. Testing (Vitest) | ✅ Hecho | 🔴 2h | 🔴 Alto |
+| 9. TypeScript strict | ✅ Hecho | 🔴 3h | 🔴 Alto |
+| 10. CSS Modules | ✅ Hecho | 🔴 2h | 🟠 Medio |
 
 ---
 
-## 🎯 Checklist de Implementación
+## 📁 Estructura Real del Proyecto
 
-### Antes de Empezar
-- [ ] Proyecto limpio sin cambios sin commitear
-- [ ] Rama de feature creada
-- [ ] Equipo alineado en DX goals
-
-### Fase por Fase
-- [ ] Fase 1: Estilos separados + tests de build
-- [ ] Fase 2: Índices + actualizar imports
-- [ ] Fase 3: Constantes + refactor de scripts
-- [ ] Fase 4: Aliases + actualizar imports
-- [ ] Fase 5: Datos separados + tipos
-- [ ] Fase 6: Layouts jerárquicos
-- [ ] Fase 7: Generator script + npm task
-- [ ] Fase 8: Vitest config + tests
-- [ ] Fase 9: Strict mode + types globales
-- [ ] Fase 10: CSS Modules (optional)
-
-### Validación
-- [ ] Build passing (no errors)
-- [ ] Tests pasando (npm run test)
-- [ ] Linter happy (TSC)
-- [ ] PR review completado
-- [ ] Documentación actualizada
+```
+src/
+├── styles/
+│   ├── global.css              ← solo @imports
+│   ├── base/
+│   │   ├── typography.css
+│   │   └── reset.css
+│   ├── theme/
+│   │   ├── colors.css
+│   │   ├── layout.css
+│   │   └── index.css
+│   ├── components/
+│   │   └── grid.css            ← 32 columnas, site-col-*
+│   └── animations/
+│       ├── backdrop.css
+│       └── index.css
+├── lib/
+│   ├── index.ts                ← barrel export
+│   ├── constants.ts            ← ANIMATION_*, GRID_CONFIG, SCROLL_TRANSFORMS, FLOATING_IMAGE_INITIAL
+│   ├── motion.ts               ← shouldAnimateByPreference(), prefersReducedMotion
+│   ├── gsap.ts                 ← initGsap(), gsap, ScrollTrigger
+│   ├── lenis.ts                ← initLenis()
+│   └── animations/
+│       ├── index.ts
+│       ├── hero.ts             ← createHeroTimeline(), createHeroInitialAnimation()
+│       ├── scroll.ts           ← createScrollTimeline()
+│       └── __tests__/
+│           ├── constants.test.ts
+│           └── motion.test.ts
+├── data/
+│   ├── index.ts                ← barrel export
+│   ├── types.ts                ← NavItem, SocialLink, HeroContent, SiteConfig
+│   └── site.ts                 ← objeto agregado con satisfies
+├── components/
+│   ├── index.ts
+│   ├── hero/
+│   │   ├── index.ts
+│   │   ├── Hero.astro
+│   │   └── Hero.module.css
+│   ├── header/
+│   │   ├── index.ts
+│   │   └── SiteHeader.astro    ← hero-nav, hero-status, hero-contact
+│   ├── grid/
+│   │   ├── index.ts
+│   │   ├── SiteGrid.astro
+│   │   └── SiteGrid.module.css
+│   └── intro/
+│       ├── index.ts
+│       └── Intro.astro
+├── layouts/
+│   ├── BaseLayout.astro
+│   ├── PageLayout.astro
+│   ├── SectionLayout.astro
+│   └── HeroLayout.astro
+├── pages/
+│   └── index.astro             ← orquesta animaciones GSAP (hero + scroll)
+└── types/
+    └── index.ts                ← re-exports + DeepReadonly<T>
+```
 
 ---
 
@@ -778,43 +543,65 @@ const { tag: Tag = 'div', class: className = '' } = Astro.props;
 
 ```typescript
 ❌ Magic numbers
-export const timings = {
-  animation: 1,  // ¿Segundos? ¿Milisegundos?
-  delay: -0.5,   // ¿Por qué negativo?
-}
+tl.to(el, { y: -1168, duration: 1 })  // ¿qué significa -1168?
 
 ✅ Named constants
-export const ANIMATION_TIMINGS = {
-  SLOWEST: 1,      // En segundos
-  NORMAL: 0.6,
-  FAST: 0.3,
-} as const;
+import { SCROLL_TRANSFORMS, ANIMATION_TIMINGS } from '@/lib'
+tl.to(el, { y: SCROLL_TRANSFORMS.ACCENT_BLOCK_Y, duration: ANIMATION_TIMINGS.SLOWEST })
 
 ❌ Imports profundos
-import X from '../../../components/hero/Hero.astro'
+import { createHeroTimeline } from '../../../lib/animations/hero'
 
-✅ Path aliases + Indices
-import { Hero } from '@/components'
+✅ Path aliases + barrel exports
+import { createHeroTimeline } from '@/lib'
 
-❌ Estilos globales sin scoping
-.container { padding: 1rem; }  // Puede chocar en otro lugar
+❌ Datos sin tipo explícito
+const nav = site.nav  // tipo implícito
 
-✅ CSS Modules
-.container { padding: 1rem; }  // Scoped automáticamente
+✅ satisfies para tipado en línea
+nav: [...] satisfies NavItem[]
 
-❌ Duplicación de lógica
-if (window.matchMedia(...).matches) { ... }  // En 2+ lugares
+❌ Estilos globales sin scoping para componentes
+.section { position: sticky; }  // puede chocar
+
+✅ CSS Modules para estilos de componente
+/* Hero.module.css */
+.section { position: sticky; }  // → Hero_section__a1b2c
+
+❌ Lógica duplicada
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { ... }
 
 ✅ Utilidades reutilizables
 import { shouldAnimateByPreference } from '@/lib'
 if (shouldAnimateByPreference()) { ... }
+```
 
-❌ Sin tipado
-const nav = site.nav  // Tipo implícito
+---
 
-✅ Tipado explícito
-import type { NavItem } from '@/data'
-const nav: NavItem[] = site.nav
+## 🎯 Convenciones de Animación GSAP
+
+Patrones específicos de este proyecto para evitar bugs conocidos:
+
+```typescript
+// ✅ Crear scroll timeline DESPUÉS del hero entry (onComplete)
+// Por qué: ScrollTrigger captura el estado del elemento cuando se crea.
+// Si se crea antes de que termine la animación de entrada, captura opacity:0.
+heroTl.eventCallback('onComplete', () => {
+  createScrollTimeline({ gsap, trigger: introEl })
+})
+
+// ✅ Usar fromTo con FROM explícito para fade-out en scroll
+// Por qué: fromTo garantiza el estado inicial sin depender del estado capturado
+tl.fromTo('[data-animate="hero-contact"]', { opacity: 1 }, { opacity: 0, ... })
+
+// ✅ immediateRender: true en tweens dentro de timeline
+// Por qué: establece el FROM state sincronamente, evitando flash de contenido
+tl.from('[data-animate="hero-nav"]', { opacity: 0, y: 12, immediateRender: true })
+
+// ✅ NO usar transition-opacity en elementos que GSAP anima directamente
+// Por qué: el CSS transition pelea con immediateRender y causa flash en y:12
+// La clase hover:opacity-80 sigue funcionando si el data-animate está en el wrapper,
+// no en el mismo elemento que tiene el hover.
 ```
 
 ---
@@ -823,64 +610,24 @@ const nav: NavItem[] = site.nav
 
 ### React + TypeScript + Vite
 ```
-Fase 1: ✅ (mismo)
-Fase 2: ✅ (mismo, pero con .tsx)
-Fase 3: ✅ (mismo, para hooks/utils)
-Fase 4: ✅ (mismo en vite.config.ts)
-Fase 5: ✅ (mismo)
-Fase 6: Adaptar a React layouts (no Astro)
-Fase 7: ✅ (mismo generator)
-Fase 8: ✅ (Vitest igual)
-Fase 9: ✅ (mismo)
-Fase 10: ✅ (CSS Modules mismo)
+Fases 1-5:  ✅ Idéntico
+Fase 6:     Adaptar a React layouts (componentes, no Astro slots)
+Fases 7-10: ✅ Idéntico
 ```
 
 ### Vue + TypeScript
 ```
-Fase 1-5: ✅ Idéntico
-Fase 6: Adaptar a Vue layouts
-Fase 7-10: ✅ Idéntico
-```
-
-### Svelte
-```
-Similar a Vue, Fase 6 adaptar a Svelte components
-```
-
-### Backend (Node.js/Express)
-```
-Fase 1: N/A (sin CSS)
-Fase 2-5: ✅ Idéntico
-Fase 6: Adaptar a middleware/routes
-Fase 7: Generar schemas, migrations, etc.
-Fase 8-9: ✅ Idéntico (testing, strict TS)
-Fase 10: N/A (sin CSS)
+Fases 1-5: ✅ Idéntico
+Fase 6:    Adaptar a Vue layouts
+Fases 7-10: ✅ Idéntico
 ```
 
 ---
 
-## 📚 Recursos
-
-### Configuración Recomendada
+## 📚 Configuración Recomendada
 
 ```json
-// tsconfig.json (baseline strict)
-{
-  "compilerOptions": {
-    "strict": true,
-    "noImplicitAny": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
-  }
-}
-```
-
-```json
-// package.json (scripts)
+// package.json
 {
   "scripts": {
     "dev": "astro dev",
@@ -888,9 +635,7 @@ Fase 10: N/A (sin CSS)
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
-    "type-check": "astro check",
-    "lint": "eslint src",
-    "format": "prettier --write src"
+    "type-check": "astro check"
   }
 }
 ```
@@ -899,169 +644,37 @@ Fase 10: N/A (sin CSS)
 
 ## 🎓 Próximos Pasos Opcionales
 
-Después de las 10 fases core:
-
-1. **E2E Testing**: Playwright/Cypress para flujos completos
+1. **E2E Testing**: Playwright para flujos completos de animación
 2. **Storybook**: Documentar componentes visualmente
-3. **CI/CD**: GitHub Actions, pre-commit hooks
-4. **Performance**: Lighthouse CI, bundler analysis
+3. **CI/CD**: GitHub Actions con type-check + tests en cada PR
+4. **Performance**: Lighthouse CI, análisis de bundle
 5. **Accessibility**: axe audits, WCAG compliance
-6. **Monitoring**: Errores, métricas, observabilidad
-7. **Documentation**: Mermaid diagramas, ADRs
-8. **Security**: Dependabot, SAST scanning
+6. **Grid generator**: Script que regenere `grid.css` desde `GRID_CONFIG.COLUMNS`
 
 ---
 
-## 📝 Ejemplo Completo: Migración
-
-**Before:**
-```
-src/
-├── global.css (289 líneas)
-└── components/
-    └── Hero.astro
-```
-
-**After:**
-```
-src/
-├── styles/
-│   ├── global.css (11 líneas)
-│   ├── base/ → typography, reset
-│   ├── theme/ → colors, layout
-│   ├── components/ → grid, animations
-│   └── animations/
-├── lib/
-│   ├── index.ts (re-exports)
-│   ├── constants.ts (40+ valores)
-│   ├── motion.ts
-│   ├── animations/
-│   │   ├── scroll.ts
-│   │   ├── hero.ts
-│   │   └── __tests__/
-│   └── gsap.ts, lenis.ts
-├── data/
-│   ├── index.ts
-│   ├── types.ts
-│   ├── config, navigation, social, content
-│   └── site.ts (agregado)
-├── components/
-│   ├── index.ts
-│   ├── hero/
-│   │   ├── index.ts
-│   │   ├── Hero.module.css
-│   │   └── Hero.astro
-│   └── grid/
-├── layouts/
-│   ├── BaseLayout.astro
-│   ├── PageLayout.astro
-│   ├── SectionLayout.astro
-│   └── HeroLayout.astro
-└── types/
-    └── index.ts
-
-scripts/
-└── generate-grid-css.ts
-
-vitest.config.ts
-tsconfig.json (strict mode)
-```
-
-**Resultado:**
-- ✅ 96% menos código en global.css
-- ✅ 80% menos profundidad en imports
-- ✅ 100% tipado con TypeScript strict
-- ✅ 5+ tests funcionando
-- ✅ Código autodocumentado y reutilizable
-- ✅ 0 breaking changes (100% compatible)
-
----
-
-## 🤝 Cómo Usar Este Documento
-
-### Para Implementar en un Proyecto Nuevo
-
-1. Leer "Principios Core" (5 min)
-2. Seguir fases 1-5 como baseline (2-3 horas)
-3. Agregar fases 6-10 según necesidad del proyecto (2-8 horas)
-
-### Para Auditar un Proyecto Existente
-
-1. Evaluar qué fases ya están implementadas
-2. Priorizar las que traen más impacto
-3. Usar como checklist de refactoring
-
-### Para Entrenar a Nuevos Desarrolladores
-
-1. Compartir "Principios Core"
-2. Explicar estructura del proyecto (Fase 1-5)
-3. Practicar writing tests (Fase 8)
-4. Enforcer TypeScript strict mode (Fase 9)
-
-### Para Agentes/Automatización
+## Para Agentes/Automatización
 
 > Este documento define el estándar DX esperado.
 > Los agentes deben seguir estas convenciones cuando generen código.
 
 ```
-Agent instruction: "Follow the 10-Phase DX Framework defined in DX_PRINCIPLES.md"
-- Prefer Fase 1: Separate concerns by domain
-- Always use Fase 4: Path aliases (@/*)
-- Write types per Fase 9: TypeScript strict
-- Implement tests per Fase 8: Vitest
-- Use Fase 3: Centralized constants
+Reglas de agente:
+- Path aliases siempre: @/components, @/lib, @/data, @/types
+- Magic numbers → src/lib/constants.ts
+- Funciones de animación → src/lib/animations/
+- Tipos → src/data/types.ts o src/types/index.ts
+- Nuevos componentes: directorio propio con index.ts barrel export
+- CSS de componente: CSS Module (.module.css) co-ubicado
+- No usar transition-opacity en elementos con data-animate directo
+- Crear scroll timelines en onComplete del hero timeline (no antes)
 ```
 
 ---
 
 ## 📖 Versión
 
-- **Versión:** 1.0
-- **Última actualización:** 2024
-- **Aplicable a:** Cualquier stack web moderno
-- **Lenguajes:** TypeScript, JavaScript, CSS
-- **Frameworks:** Astro, React, Vue, Svelte, Next.js, Nuxt
-
----
-
-**¿Preguntas? Expandir sección: **[Preguntas Frecuentes](#faq)**
-
----
-
-## FAQ
-
-### P: ¿Debo implementar todas las 10 fases?
-
-**R:** No. Las fases 1-5 son core (aplicable a cualquier proyecto). Las fases 6-10 son opcionales según:
-- Fase 6: Multi-page apps
-- Fase 7: Proyectos con grid repetitivo
-- Fase 8-9: Equipos grandes
-- Fase 10: Proyectos grandes con muchos componentes
-
-### P: ¿Puedo hacer esto en un proyecto existente?
-
-**R:** Sí. Haz un branch feature y refactor fase por fase. Cada fase es independiente y backward-compatible (sin breaking changes).
-
-### P: ¿Cuánto tiempo toma implementar?
-
-**R:** 
-- Fases 1-5: 2-3 horas
-- Fases 6-7: +2 horas
-- Fases 8-10: +6-8 horas
-- **Total:** ~12-13 horas para todo
-
-### P: ¿Funciona con [mi stack]?
-
-**R:** Sí. El framework es agnóstico. Ver "Adaptación a Otros Stacks" arriba.
-
-### P: ¿Esto es obligatorio?
-
-**R:** No es obligatorio, pero hace el código:
-- Más fácil de mantener
-- Más fácil de entender
-- Más fácil de testear
-- Más fácil de escalar
-
-Es una inversión upfront que paga a largo plazo.
-
----
+- **Versión:** 2.0
+- **Última actualización:** 2025
+- **Stack:** Astro + GSAP + Tailwind + TypeScript strict
+- **Grid:** 32 columnas, 40px margin, 16px gutter
