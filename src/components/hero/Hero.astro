@@ -2,7 +2,7 @@
 import { SiteGrid } from '@/components/grid'
 import { SiteHeader } from '@/components/header'
 import { site } from '@/data'
-import { ArrowUpRight, ArrowDown } from '@lucide/astro'
+import { ArrowDown, ArrowUpRight } from '@lucide/astro'
 ---
 
 <section id="hero" class="sticky top-0 h-dvh text-foreground overflow-hidden">
@@ -10,7 +10,7 @@ import { ArrowUpRight, ArrowDown } from '@lucide/astro'
     <SiteHeader />
 
     <!-- Tagline + Title + Social links -->
-    <div class="site-col-start-4 site-col-span-10 flex min-h-0 flex-col gap-4 pb-6 mt-32">
+    <div class="site-col-start-4 site-col-span-12 flex min-h-0 flex-col gap-4 pb-6 mt-32">
       <p class="text-base font-semibold leading-none text-accent" data-animate="hero-tagline">
         {site.tagline}
       </p>
@@ -40,8 +40,11 @@ import { ArrowUpRight, ArrowDown } from '@lucide/astro'
     </div>
 
     <!-- Subtitle + CTA -->
-    <div class="site-col-start-4 site-col-span-8 flex flex-col gap-6">
-      <p class="max-w-[372px] text-2xl font-semibold leading-[1.26] text-foreground" data-animate="hero-sub">
+    <div class="site-col-start-4 site-col-span-10 flex flex-col gap-6">
+      <p
+        class="max-w-93 text-2xl font-semibold leading-[1.26] text-foreground"
+        data-animate="hero-sub"
+      >
         {site.hero.subtitle}
       </p>
       <div data-animate="hero-cta">
@@ -70,4 +73,3 @@ import { ArrowUpRight, ArrowDown } from '@lucide/astro'
     </div>
   </SiteGrid>
 </section>
-
