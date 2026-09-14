@@ -23,7 +23,10 @@ const [emailUser, emailDomain] = site.email.split('@')
   </div>
 
   <!-- Freelance status -->
-  <div class="flex items-start gap-3 site-col-start-4 site-col-span-5" data-animate="hero-status">
+  <div
+    class="flex items-start gap-3 site-col-start-4 site-col-span-5 self-start"
+    data-animate="hero-status"
+  >
     <Link variant="tertiary" label="Freelance" href="#" active={true} />
     <Link variant="tertiary" label="Contractor" href="#" active={false} />
   </div>
@@ -36,7 +39,7 @@ const [emailUser, emailDomain] = site.email.split('@')
     id="contact-email-btn"
     data-u={emailUser}
     data-d={emailDomain}
-    class="site-col-start-29 site-col-span-4 flex items-start justify-end"
+    class="site-col-start-29 site-col-span-4 flex items-center justify-end self-start"
     data-animate="hero-contact"
     aria-label="Copiar email de contacto"
   >
