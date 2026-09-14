@@ -1,16 +1,21 @@
-import type { NavItem, SocialLink, HeroContent } from '@/data/types'
+import type { HeroContent, NavItem, ProfileItem, SocialLink } from '@/data/types'
 
 export const site = {
   name: 'Cri Works',
   email: 'cri@cri.works',
-  tagline: 'Product Designer based in Santiago, Chile.',
+  tagline: 'Product Designer en Santiago, Chile.',
   isUnderConstruction: false,
 
   nav: [
     { label: 'Cri Works', href: '#', active: true },
-    { label: 'Work', href: '#work', active: false },
-    { label: 'Bio', href: '#bio', active: false },
+    { label: 'Work (soon)', href: '#work', active: false },
+    { label: 'Bio (soon)', href: '#bio', active: false },
   ] satisfies NavItem[],
+
+  profile: [
+    { label: 'Freelance', href: '#', active: true },
+    { label: 'Contractor (soon)', href: '#work', active: false },
+  ] satisfies ProfileItem[],
 
   social: [
     { label: 'Instagram', href: 'https://instagram.com/cri.works' },

@@ -22,13 +22,16 @@ const [emailUser, emailDomain] = site.email.split('@')
     </nav>
   </div>
 
-  <!-- Freelance status -->
+  <!-- Profile links -->
   <div
     class="flex items-start gap-3 site-col-start-4 site-col-span-5 self-start"
     data-animate="hero-status"
   >
-    <Link variant="tertiary" label="Freelance" href="#" active={true} />
-    <Link variant="tertiary" label="Contractor" href="#" active={false} />
+    {
+      site.profile.map(item => (
+        <Link variant="tertiary" label={item.label} href={item.href} active={item.active} />
+      ))
+    }
   </div>
 
   <!-- Contact: copy-to-clipboard — no mailto: or email address in the HTML -->
