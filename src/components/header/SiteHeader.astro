@@ -1,6 +1,10 @@
 ---
 import { site } from '@/data'
 import { Circle, Mail } from '@lucide/astro'
+
+// Email split so neither the address nor mailto: appears in the HTML.
+// JS assembles and displays it — bots that don't execute JS never see it.
+const [emailUser, emailDomain] = site.email.split('@')
 ---
 
 <header
@@ -26,20 +30,80 @@ import { Circle, Mail } from '@lucide/astro'
     </nav>
   </div>
 
-  <!-- Freelance status — col 4-8, baseline-aligned with first nav item -->
+  <!-- Freelance status -->
   <div class="flex items-start gap-3 site-col-start-4 site-col-span-5" data-animate="hero-status">
     <Circle size={10} fill="currentColor" stroke-width={0} class="shrink-0 text-accent" />
     <span class="text-base font-semibold text-accent">Freelance</span>
     <span class="text-base font-semibold text-accent opacity-60 cursor-default">Contractor</span>
   </div>
 
-  <!-- Contact -->
-  <a
-    href={`mailto:${site.email}`}
-    class="site-col-start-29 site-col-span-4 flex items-start justify-end gap-2 text-base font-semibold text-foreground"
+  <!-- Contact: copy-to-clipboard — no mailto: or email address in the HTML -->
+  <button
+    type="button"
+    id="contact-email-btn"
+    data-u={emailUser}
+    data-d={emailDomain}
+    class="site-col-start-29 site-col-span-4 flex items-start justify-end gap-2 text-base font-semibold text-foreground cursor-pointer"
     data-animate="hero-contact"
+    aria-label="Copiar email de contacto"
   >
     <Mail size={14} stroke-width={1.5} class="shrink-0" />
-    {site.email}
-  </a>
+    <span id="contact-email-label"></span>
+  </button>
 </header>
+
+<!-- Toast: fixed pill, positioned and animated entirely by GSAP -->
+<div
+  id="email-copied-toast"
+  role="status"
+  aria-live="polite"
+  class="fixed bottom-8 z-50 pointer-events-none"
+  style="left: 50%; opacity: 0;"
+>
+  <div class="bg-foreground text-background text-sm font-semibold px-4 py-2.5 rounded-full whitespace-nowrap">
+    Email copiado
+  </div>
+</div>
+
+<script>
+  import { gsap } from '@/lib'
+
+  const btn    = document.getElementById('contact-email-btn') as HTMLButtonElement | null
+  const label  = document.getElementById('contact-email-label')
+  const toast  = document.getElementById('email-copied-toast')
+
+  if (btn && label) {
+    const email = `${btn.dataset.u ?? ''}@${btn.dataset.d ?? ''}`
+
+    // Fill visible label and aria-label from JS — never in HTML
+    label.textContent = email
+    btn.setAttribute('aria-label', `Copiar ${email}`)
+
+    // Center toast via GSAP (owns the full transform, no CSS conflict)
+    if (toast) gsap.set(toast, { xPercent: -50, y: 8 })
+
+    let hideTimer: ReturnType<typeof setTimeout> | null = null
+
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(email)
+        showToast()
+      } catch {
+        // Fallback: open mail client (rare — only on HTTP or old browsers)
+        window.location.href = `mailto:${email}`
+      }
+    })
+
+    function showToast(): void {
+      if (!toast) return
+      if (hideTimer) clearTimeout(hideTimer)
+
+      gsap.killTweensOf(toast)
+      gsap.to(toast, { opacity: 1, y: 0, duration: 0.2, ease: 'power2.out' })
+
+      hideTimer = setTimeout(() => {
+        gsap.to(toast, { opacity: 0, y: 8, duration: 0.25, ease: 'power2.in' })
+      }, 2200)
+    }
+  }
+</script>
