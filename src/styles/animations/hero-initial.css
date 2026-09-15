@@ -1,0 +1,15 @@
+/* Hide all hero-animated elements from the very first paint.
+   Scoped to no-preference so reduced-motion users see content immediately. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-animate="floating-image"],
+  .hero-title-line,
+  [data-animate="hero-sub"],
+  [data-animate="hero-nav"],
+  [data-animate="hero-status"],
+  [data-animate="hero-tagline"],
+  [data-animate="hero-contact"],
+  [data-animate="hero-social"],
+  [data-animate="hero-cta"] {
+    opacity: 0;
+  }
+}

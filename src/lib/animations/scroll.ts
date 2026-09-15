@@ -65,7 +65,6 @@ export function createScrollTimeline({
     ANIMATION_TIMINGS.SLOWEST * 0.35
   )
 
-
   // Hero Backdrop: blur over the gradient, fades out toward intro
   tl.to(
     '[data-animate="hero-backdrop"]',
@@ -113,17 +112,8 @@ export function createScrollTimeline({
     ANIMATION_TIMINGS.FAST * 0.67
   )
   tl.to(
-    '[data-animate="hero-tagline"], [data-animate="hero-social"], [data-animate="hero-status"]',
+    '[data-animate="hero-tagline"], [data-animate="hero-social"], [data-animate="hero-status"], [data-animate="hero-contact"]',
     { opacity: 0, duration: ANIMATION_TIMINGS.FAST, ease: 'none', overwrite: false },
-    ANIMATION_TIMINGS.FAST * 1.33
-  )
-
-  // hero-contact fade-out: uses fromTo so its start state is always opacity:1,
-  // independent of any hero entry animation timing.
-  tl.fromTo(
-    '[data-animate="hero-contact"]',
-    { opacity: 1 },
-    { opacity: 0, duration: ANIMATION_TIMINGS.FAST, ease: 'none' },
     ANIMATION_TIMINGS.FAST * 1.33
   )
 

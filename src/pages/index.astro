@@ -29,7 +29,7 @@ import { site } from '@/data'
       src="/images/cri-colored-new-techblue-blured.png"
       alt=""
       class="absolute max-w-none object-cover"
-      style="bottom: -10%; left: 45%; height: 125dvh; opacity: 1"
+      style="bottom: -10%; left: 45%; height: 125dvh;"
       data-animate="floating-image"
     />
   </div>
@@ -52,6 +52,7 @@ import { site } from '@/data'
 <script>
   import {
     createHeroInitialAnimation,
+    createFloatingImageEntrance,
     createHeroTimeline,
     createScrollTimeline,
     initGsap,
@@ -144,14 +145,19 @@ import { site } from '@/data'
 
       const introElement = document.querySelector('#intro')
 
-      // hero entry timeline (nav, status, tagline, social, title, sub, cta).
-      // scroll timeline is created in onComplete so ScrollTrigger captures
-      // opacity:1 as the start state for all fade-out tweens.
-      const heroTl = createHeroTimeline({ gsap })
+      // Create text timeline paused — from() tweens with immediateRender:true
+      // hide all text elements immediately, avoiding any visible flash during image entrance
+      const heroTl = createHeroTimeline({ gsap, paused: true })
       heroTl.eventCallback('onComplete', () => {
         if (introElement) {
           createScrollTimeline({ gsap, trigger: introElement })
         }
+      })
+
+      // Image slides in first; text plays only after image reaches final position
+      const imageTl = createFloatingImageEntrance({ gsap })
+      imageTl.eventCallback('onComplete', () => {
+        heroTl.play()
       })
     }
   }
