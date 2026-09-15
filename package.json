@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@vitest/ui": "^2.1.6",
-    "jsdom": "^25.3.1",
+    "jsdom": "^30.0.1",
     "tsx": "^4.19.3",
     "vitest": "^2.1.6"
   },
